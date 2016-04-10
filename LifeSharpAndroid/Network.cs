@@ -51,9 +51,9 @@ static public class Network
 	}
 
 	// Downloads the specified URL into a JSON output.
-	static public async Task<JsonValue> HttpPostGetJsonAsync(string url, IDictionary<string, string> param)
+	static public async Task<JsonValue> HttpPostToJsonAsync(string url, IDictionary<string, string> param)
 	{
-		Log.Info(LogTag, "Performing HttpPostGetJsonAsync, URL {0}", url);
+		Log.Info(LogTag, "Performing HttpPostToJsonAsync, URL {0}", url);
 
 		using (HttpContent content = new FormUrlEncodedContent(param.ToArray()))
 		using (HttpClient client = new HttpClient())
@@ -68,22 +68,47 @@ static public class Network
 		}
 	}
 
-	// Logs into the LifeStream server and gets the JSON results of that request.
+	// Downloads the specified URL into a JSON output.
+	static public async Task<JsonValue> HttpGetToJsonAsync(string url, IDictionary<string, string> param)
+	{
+		Log.Info(LogTag, "Performing HttpGetToJsonAsync, URL {0}", url);
+
+		using (HttpClient client = new HttpClient())
+		using (HttpResponseMessage response = await client.GetAsync(url))
+		using (HttpContent responseContent = response.Content)
+		{
+			// Use this stream to build a JSON document object.
+			JsonValue jsonDoc = JsonObject.Load(await responseContent.ReadAsStreamAsync());
+			Log.Info(LogTag, "Response: {0}", jsonDoc.ToString());
+
+			return jsonDoc;
+		}
+	}
+
+	// Logs into the LifeStream server and gets the JSON results of that request. Returns a token as a string
+	// or null if the login failed.
 	static public async Task<string> Login(Settings settings)
 	{
 		var param = new Dictionary<string, string>()
 		{
 			{ "login", settings.userName },
-			{ "pass", settings.password },
-			{ "gcm", "" },
-			{ "auth", "" }
+			{ "password", settings.password }
 		};
-		JsonValue results = await HttpPostGetJsonAsync(Settings.BaseUrl + "login.php", param);
+		JsonValue results = await HttpPostToJsonAsync(Settings.BaseUrl + "api/user/login", param);
 
-		string result = results["message"];
-		Log.Info(LogTag, "Login results: {0}", result);
+		bool success = results["success"];
+		if (success)
+		{
+			string token = results["token"];
+			Log.Info(LogTag, "Login results: {0}", token);
 
-		return result;
+			return token;
+		}
+		else
+		{
+			Log.Info(LogTag, "Login failed: {0}", results["error"]);
+			return null;
+		}
 	}
 }
 }
