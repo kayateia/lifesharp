@@ -1,12 +1,4 @@
 LifeSharp - Instant Photo Sharing ... in C#
-Copyright (C) 2015 Kayateia
+Copyright (C) 2015-2016 Kayateia
 
 Please see the GPLv3 under notes for license info.
-
------
-
-This is just a C# version of LifeStream, which I'm using to learn how
-to use Xamarin. It is a shame that one can't include the GCM libraries
-without paying, because that pretty much kills this. But it's been an
-interesting (unfinished) exercise anyhow.
-
