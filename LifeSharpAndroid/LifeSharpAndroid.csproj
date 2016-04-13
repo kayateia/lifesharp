@@ -73,6 +73,7 @@
     <Compile Include="ImageQueue.cs" />
     <Compile Include="ImageQueueAndroid.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="StreamService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

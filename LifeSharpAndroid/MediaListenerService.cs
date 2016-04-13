@@ -95,6 +95,10 @@ public class MediaListenerService : ILifeSharpService
 	{
 		Log.Info(LogTag, "Stopped media listener");
 	}
+
+	public void kick(Context context, Settings settings)
+	{
+	}
 }
 }
 

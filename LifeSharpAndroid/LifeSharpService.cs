@@ -39,6 +39,7 @@ interface ILifeSharpService
 {
 	void start(Context context, Settings settings);
 	void stop(Context context, Settings settings);
+	void kick(Context context, Settings settings);
 }
 
 [Service]
@@ -68,7 +69,11 @@ public class LifeSharpService : Service
 	public override StartCommandResult OnStartCommand(Android.Content.Intent intent, StartCommandFlags flags, int startId)
 	{
 		if (_initted)
+		{
+			Log.Info(LogTag, "Kicked LifeSharp service");
+			kickServices(this.ApplicationContext, _settings);
 			return StartCommandResult.Sticky;
+		}
 
 		Log.Info(LogTag, "Started LifeSharp service");
 		_settings = new Settings(this.ApplicationContext);
@@ -88,6 +93,12 @@ public class LifeSharpService : Service
 		return typeof(LifeSharpService).Assembly.GetTypes()
 			.Where(t => t.GetCustomAttribute<LifeSharpServiceAttribute>() != null)
 			.Select(t => (ILifeSharpService)Activator.CreateInstance(t));
+	}
+
+	void kickServices(Context context, Settings settings)
+	{
+		foreach (var service in _services)
+			service.kick(context, settings);
 	}
 }
 }
