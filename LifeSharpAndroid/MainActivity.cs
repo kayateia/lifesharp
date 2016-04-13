@@ -74,12 +74,17 @@ public class MainActivity : Activity
 			{
 				string result = await Network.Login(settings);
 				statusLabel.Text = result;
+				settings.authToken = result;
+				settings.commit();
 			}
 			catch (Exception ex)
 			{
 				Log.Info("LifeSharp", "Can't contact server: {0}", ex);
 				statusLabel.Text = "Exception during login";
 			}
+
+			var json = await Network.HttpGetToJsonAsync(Settings.BaseUrl + "api/stream/1/contents", settings.authToken);
+			Log.Info("LifeSharp", "Got back json: {0}", json);
 		};
 	}
 }

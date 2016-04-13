@@ -14,6 +14,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
  */
 
 using System;
@@ -26,6 +27,7 @@ using System.Linq;
 using System.Text;
 using Android.Util;
 using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace LifeSharp
 {
@@ -34,54 +36,85 @@ static public class Network
 	const string LogTag = "LifeSharp/Network";
 
 	// Downloads the specified URL into the specified file.
-	static public async Task HttpDownloadAsync(string url, string outputFilename)
+	static public async Task HttpDownloadAsync(string url, string token, string outputFilename)
 	{
 		Log.Info(LogTag, "Performing HttpDownloadAsync, URL {0}", url);
 
 		using (HttpClient client = new HttpClient())
-		using (HttpResponseMessage response = await client.GetAsync(url))
-		using (HttpContent responseContent = response.Content)
 		{
-			// Copy the results out to the specified file.
-			using (FileStream output = File.OpenWrite(outputFilename))
+			var request = new HttpRequestMessage()
 			{
-				await responseContent.CopyToAsync(output);
+				RequestUri = new System.Uri(url),
+				Method = HttpMethod.Get
+			};
+			if (token != null)
+				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+			using (HttpResponseMessage response = await client.SendAsync(request))
+			using (HttpContent responseContent = response.Content)
+			{
+				// Copy the results out to the specified file.
+				using (FileStream output = File.OpenWrite(outputFilename))
+				{
+					await responseContent.CopyToAsync(output);
+				}
 			}
 		}
 	}
 
 	// Downloads the specified URL into a JSON output.
-	static public async Task<JsonValue> HttpPostToJsonAsync(string url, IDictionary<string, string> param)
+	static public async Task<JsonValue> HttpPostToJsonAsync(string url, string token, IDictionary<string, string> param)
 	{
 		Log.Info(LogTag, "Performing HttpPostToJsonAsync, URL {0}", url);
 
 		using (HttpContent content = new FormUrlEncodedContent(param.ToArray()))
 		using (HttpClient client = new HttpClient())
-		using (HttpResponseMessage response = await client.PostAsync(url, content))
-		using (HttpContent responseContent = response.Content)
 		{
-			// Use this stream to build a JSON document object.
-			JsonValue jsonDoc = JsonObject.Load(await responseContent.ReadAsStreamAsync());
-			Log.Info(LogTag, "Response: {0}", jsonDoc.ToString());
+			var request = new HttpRequestMessage()
+			{
+				RequestUri = new System.Uri(url),
+				Method = HttpMethod.Post,
+				Content = content
+			};
+			if (token != null)
+				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-			return jsonDoc;
+			using (HttpResponseMessage response = await client.SendAsync(request))
+			using (HttpContent responseContent = response.Content)
+			{
+				// Use this stream to build a JSON document object.
+				JsonValue jsonDoc = JsonObject.Load(await responseContent.ReadAsStreamAsync());
+				Log.Info(LogTag, "Response: {0}", jsonDoc.ToString());
+
+				return jsonDoc;
+			}
 		}
 	}
 
 	// Downloads the specified URL into a JSON output.
-	static public async Task<JsonValue> HttpGetToJsonAsync(string url, IDictionary<string, string> param)
+	static public async Task<JsonValue> HttpGetToJsonAsync(string url, string token)
 	{
 		Log.Info(LogTag, "Performing HttpGetToJsonAsync, URL {0}", url);
 
 		using (HttpClient client = new HttpClient())
-		using (HttpResponseMessage response = await client.GetAsync(url))
-		using (HttpContent responseContent = response.Content)
 		{
-			// Use this stream to build a JSON document object.
-			JsonValue jsonDoc = JsonObject.Load(await responseContent.ReadAsStreamAsync());
-			Log.Info(LogTag, "Response: {0}", jsonDoc.ToString());
+			var request = new HttpRequestMessage()
+			{
+				RequestUri = new System.Uri(url),
+				Method = HttpMethod.Get
+			};
+			if (token != null)
+				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-			return jsonDoc;
+			using (HttpResponseMessage response = await client.SendAsync(request))
+			using (HttpContent responseContent = response.Content)
+			{
+				// Use this stream to build a JSON document object.
+				JsonValue jsonDoc = JsonObject.Load(await responseContent.ReadAsStreamAsync());
+				Log.Info(LogTag, "Response: {0}", jsonDoc.ToString());
+
+				return jsonDoc;
+			}
 		}
 	}
 
@@ -94,7 +127,7 @@ static public class Network
 			{ "login", settings.userName },
 			{ "password", settings.password }
 		};
-		JsonValue results = await HttpPostToJsonAsync(Settings.BaseUrl + "api/user/login", param);
+		JsonValue results = await HttpPostToJsonAsync(Settings.BaseUrl + "api/user/login", null, param);
 
 		bool success = results["success"];
 		if (success)
