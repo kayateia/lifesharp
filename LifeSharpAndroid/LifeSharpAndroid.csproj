@@ -78,6 +78,7 @@
     <Compile Include="Utils.cs" />
     <Compile Include="GalleryActivity.cs" />
     <Compile Include="StreamService.cs" />
+    <Compile Include="Protocol.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
