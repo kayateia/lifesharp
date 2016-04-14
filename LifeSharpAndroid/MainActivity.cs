@@ -85,6 +85,10 @@ public class MainActivity : Activity
 				statusLabel.Text = "Exception during login";
 			}
 		};
+		button = FindViewById<Button>(Resource.Id.buttonGallery);
+		button.Click += delegate(object sender, EventArgs e) {
+			StartActivity(typeof(GalleryActivity));
+		};
 	}
 }
 
