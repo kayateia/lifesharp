@@ -132,6 +132,7 @@ public class StreamService : ILifeSharpService
 	public void start(Context context, Settings settings)
 	{
 		Log.Info(LogTag, "Started stream service");
+		kick(context, settings);
 	}
 
 	public void stop(Context context, Settings settings)
