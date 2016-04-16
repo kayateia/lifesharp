@@ -1,4 +1,12 @@
-﻿using System;
+﻿/*
+	LifeStream - Instant Photo Sharing
+	Copyright (C) 2014-2016 Kayateia
+
+	This code is licensed under the GPL v3 or later.
+	Please see the file LICENSE for more info.
+ */
+
+using System;
 using Android.Content;
 using Android.Net;
 using Android.App;
@@ -10,7 +18,10 @@ using Android.Provider;
 namespace LifeSharp
 {
 
-public class Notifications
+/// <summary>
+/// Utility methods for handling notifications of uploads and downloads.
+/// </summary>
+static public class Notifications
 {
 	const string LogTag = "LifeStream/Notifications";
 

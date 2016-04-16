@@ -1,9 +1,20 @@
-﻿using System;
+﻿/*
+	LifeStream - Instant Photo Sharing
+	Copyright (C) 2014-2016 Kayateia
+
+	This code is licensed under the GPL v3 or later.
+	Please see the file LICENSE for more info.
+ */
+
+using System;
 using System.Json;
 
 namespace LifeSharp.Protocol
 {
 
+/// <summary>
+/// Represents the return from a Stream Contents REST call to the LifeStream server
+/// </summary>
 public class StreamContents
 {
 	public StreamContents(JsonValue source)
@@ -30,7 +41,11 @@ public class StreamContents
 		}
 	}
 
+	/// <summary>
+	/// The error message, if any; if no error was detected, this is null.
+	/// </summary>
 	public string error;
+
 	public Image[] images;
 
 	public class Image

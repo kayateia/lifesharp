@@ -1,19 +1,9 @@
 ﻿/*
-    LifeStream - Instant Photo Sharing
-    Copyright (C) 2014-2016 Kayateia
+	LifeStream - Instant Photo Sharing
+	Copyright (C) 2014-2016 Kayateia
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	This code is licensed under the GPL v3 or later.
+	Please see the file LICENSE for more info.
  */
 
 using System;
@@ -68,6 +58,7 @@ public class LifeSharpService : Service
 
 	public override StartCommandResult OnStartCommand(Android.Content.Intent intent, StartCommandFlags flags, int startId)
 	{
+		// If we've already been initted, then just do a kick and bail.
 		if (_initted)
 		{
 			Log.Info(LogTag, "Kicked LifeSharp service");
@@ -86,15 +77,20 @@ public class LifeSharpService : Service
 		return StartCommandResult.Sticky;
 	}
 
+	/// <summary>
+	/// Find all the types in this assembly with the LifeSharp service attribute.
+	/// Create them and return the instances.
+	/// </summary>
 	IEnumerable<ILifeSharpService> getServices()
 	{
-		// Find all the types in this assembly with the LifeSharp service attribute.
-		// Create them and return the instances.
 		return typeof(LifeSharpService).Assembly.GetTypes()
 			.Where(t => t.GetCustomAttribute<LifeSharpServiceAttribute>() != null)
 			.Select(t => (ILifeSharpService)Activator.CreateInstance(t));
 	}
 
+	/// <summary>
+	/// Gives all our services a swift kick in the okole. (i.e. tells them to do processing if they need to)
+	/// </summary>
 	void kickServices(Context context, Settings settings)
 	{
 		foreach (var service in _services)

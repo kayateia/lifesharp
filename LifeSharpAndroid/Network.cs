@@ -1,20 +1,9 @@
 ﻿/*
-    LifeStream - Instant Photo Sharing
-    Copyright (C) 2014-2016 Kayateia
+	LifeStream - Instant Photo Sharing
+	Copyright (C) 2014-2016 Kayateia
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+	This code is licensed under the GPL v3 or later.
+	Please see the file LICENSE for more info.
  */
 
 using System;
@@ -31,11 +20,20 @@ using System.Net.Http.Headers;
 
 namespace LifeSharp
 {
+
+/// <summary>
+/// Network protocol utilities, for talking to the LifeStream server
+/// </summary>
 static public class Network
 {
 	const string LogTag = "LifeSharp/Network";
 
-	// Downloads the specified URL into the specified file.
+	/// <summary>
+	/// Downloads the specified URL into the specified file.
+	/// </summary>
+	/// <param name="url">The URL to download</param>
+	/// <param name="token">The authentication token to use</param>
+	/// <param name="outputFilename">Where to write the file</param>
 	static public async Task HttpDownloadAsync(string url, string token, string outputFilename)
 	{
 		Log.Info(LogTag, "Performing HttpDownloadAsync, URL {0}", url);
@@ -62,7 +60,13 @@ static public class Network
 		}
 	}
 
-	// Downloads the specified URL into a JSON output.
+	/// <summary>
+	/// Downloads the specified URL into a JSON output.
+	/// </summary>
+	/// <returns>The JSON data</returns>
+	/// <param name="url">The URL to POST to</param>
+	/// <param name="token">The authentication token to use</param>
+	/// <param name="param">POST parameters</param>
 	static public async Task<JsonValue> HttpPostToJsonAsync(string url, string token, IDictionary<string, string> param)
 	{
 		Log.Info(LogTag, "Performing HttpPostToJsonAsync, URL {0}", url);
@@ -91,7 +95,12 @@ static public class Network
 		}
 	}
 
-	// Downloads the specified URL into a JSON output.
+	/// <summary>
+	/// Downloads the specified URL into a JSON output.
+	/// </summary>
+	/// <returns>The JSON data</returns>
+	/// <param name="url">The URL to download</param>
+	/// <param name="token">The authentication token to use</param>
 	static public async Task<JsonValue> HttpGetToJsonAsync(string url, string token)
 	{
 		Log.Info(LogTag, "Performing HttpGetToJsonAsync, URL {0}", url);
@@ -118,8 +127,10 @@ static public class Network
 		}
 	}
 
-	// Logs into the LifeStream server and gets the JSON results of that request. Returns a token as a string
-	// or null if the login failed.
+	/// <summary>
+	/// Logs into the LifeStream server and gets the JSON results of that request. Returns a token as a string
+	/// or null if the login failed.
+	/// </summary>
 	static public async Task<string> Login(Settings settings)
 	{
 		var param = new Dictionary<string, string>()
@@ -144,5 +155,5 @@ static public class Network
 		}
 	}
 }
-}
 
+}
