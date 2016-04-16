@@ -1,0 +1,4 @@
+Sadly, a PCL won't work here because half of what a lot of these classes
+need is not available in the PCL (JSON, HTTP, etc). Instead, they are here
+to be linked into another project by source reference.
+

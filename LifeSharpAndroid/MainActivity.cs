@@ -26,6 +26,8 @@ public class MainActivity : Activity
 	{
 		base.OnCreate(bundle);
 
+		Log.SetLogger(new LogAndroid());
+
 		LifeSharpService.Start(this);
 
 		// Set our view from the "main" layout resource

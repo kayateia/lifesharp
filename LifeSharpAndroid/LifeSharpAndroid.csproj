@@ -71,7 +71,6 @@
     <Compile Include="MediaListenerService.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="MainActivity.cs" />
-    <Compile Include="Network.cs" />
     <Compile Include="LifeSharpService.cs" />
     <Compile Include="ImageQueue.cs" />
     <Compile Include="ImageQueueAndroid.cs" />
@@ -81,6 +80,13 @@
     <Compile Include="Protocol.cs" />
     <Compile Include="Notifications.cs" />
     <Compile Include="MediaScannerWrapper.cs" />
+    <Compile Include="..\LifeSharpCore\Log.cs">
+      <Link>Core\Log.cs</Link>
+    </Compile>
+    <Compile Include="..\LifeSharpCore\Network.cs">
+      <Link>Core\Network.cs</Link>
+    </Compile>
+    <Compile Include="LogAndroid.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -102,4 +108,7 @@
     <AndroidResource Include="Resources\drawable-xhdpi\TransferUp.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Core\" />
+  </ItemGroup>
 </Project>
