@@ -67,14 +67,22 @@ public class StreamService : ILifeSharpService
 			//
 			// This will also make the images available to the wider Android ecosystem by getting them
 			// into the media scanner.
+			//
+			// We don't actually do a notification here until the last image, because otherwise
+			// the user might get a flood of notifications if they've been offline or whatever.
+			int imageCount = model.images.Length;
 			var scanner = new MediaScannerWrapper(context)
 			{
-				scanned = (string path, Uri uri, string message) =>
+				scanned = (string path, Uri uri, string message, Protocol.StreamContents.Image imgdata) =>
 				{
-					// The user directory will be the last path component. We can hash
-					// that and make a unique notification ID. This isn't guaranteed to be
-					// unique, but for our test purposes, it should work.
-					Notifications.NotifyDownload(context, 100, true, message, message, "", uri);
+					if (--imageCount == 0)
+					{
+						// We can hash the user login and make a unique notification ID. This will result in each
+						// other user getting a separate notification stack. This isn't guaranteed to be
+						// unique, but for our test purposes, it should work.
+						int hash = imgdata.userLogin.GetHashCode() % 100000;
+						Notifications.NotifyDownload(context, 100 + hash, true, message, message, "", uri);
+					}
 				}
 			};
 
@@ -90,7 +98,9 @@ public class StreamService : ILifeSharpService
 				Log.Info(LogTag, String.Format("Download image {0}/{1} to {2}", img.id, img.filename, imgpath));
 
 				await Network.HttpDownloadAsync(Settings.BaseUrl + "api/image/get/" + img.id, settings.authToken, imgpath);
-				scanner.addFile(imgpath, "New picture from " + img.userLogin);
+				string message = String.Format("New picture{0} from {1}",
+					model.images.Length > 0 ? String.Format("s ({0})", model.images.Length) : "", img.userLogin);
+				scanner.addFile(imgpath, message, img);
 			}
 
 			scanner.scan();

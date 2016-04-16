@@ -13,6 +13,8 @@ using Android.Content;
 using Android.Util;
 using Uri = Android.Net.Uri;
 
+using LifeSharp.Protocol;
+
 namespace LifeSharp
 {
 
@@ -30,24 +32,27 @@ public class MediaScannerWrapper : Java.Lang.Object, MediaScannerConnection.IMed
 
 	MediaScannerConnection _connection;
 	List<string> _paths;
-	Dictionary<string,string> _messages;
+	Dictionary<string, string> _messages;
+	Dictionary<string, StreamContents.Image> _imageData;
 
 	public MediaScannerWrapper(Context ctx)
 	{
 		_connection = new MediaScannerConnection(ctx, this);
 		_paths = new List<String>();
-		_messages = new Dictionary<String,String>();
+		_messages = new Dictionary<string, string>();
+		_imageData = new Dictionary<string, StreamContents.Image>();
 	}
 
 	/// <summary>
 	/// Adds a file for consideration.
 	/// </summary>
-	/// <param name="fn">The filename</param>
+	/// <param name="fn">The full path filename in the filesystem</param>
 	/// <param name="message">A message that goes with the file, to be sent along with the callback later</param>
-	public void addFile(string fn, string message)
+	public void addFile(string fn, string message, StreamContents.Image imageData)
 	{
 		_paths.Add(fn);
 		_messages[fn] = message;
+		_imageData[fn] = imageData;
 	}
 
 	/// <summary>
@@ -96,13 +101,13 @@ public class MediaScannerWrapper : Java.Lang.Object, MediaScannerConnection.IMed
 	/// Scanner callback; set this value before starting any scanning, and the delegate
 	/// will be called with results.
 	/// </summary>
-	public Action<string /*path*/, Uri, string /*message*/> scanned;
+	public Action<string /*path*/, Uri, string /*message*/, StreamContents.Image> scanned;
 
 	public void OnScanCompleted(string path, Uri uri)
 	{
 		// when scan is completes, update media file tags
 		Log.Info("MediaScannerWrapper", "media file scanned: " + path + " - " + uri.ToString());
-		this.scanned(path, uri, getMessage(path));
+		this.scanned(path, uri, getMessage(path), _imageData[path]);
 	}
 
 	string getMessage(string path)
