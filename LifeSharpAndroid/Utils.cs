@@ -50,6 +50,14 @@ static public class Utils
 	{
 		return s.Equals(t, StringComparison.OrdinalIgnoreCase);
 	}
+
+	/// <summary>
+	/// Adds an IsNullOrEmpty() extension method to the string object.
+	/// </summary>
+	static public bool IsNullOrEmpty(this string s)
+	{
+		return s == null || s.Length == 0;
+	}
 }
 
 }

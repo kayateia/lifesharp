@@ -42,6 +42,12 @@ public class StreamService : ILifeSharpService
 
 	async Task doCheck(Context context, Settings settings)
 	{
+		if (!settings.enabled || settings.authToken.IsNullOrEmpty())
+		{
+			Log.Info(LogTag, "App is disabled or not logged in; skipping stream service check");
+			return;
+		}
+
 		Log.Info(LogTag, "Doing new files check on server");
 
 		// We pull the new check time up front because our snapshot of what images are available to
