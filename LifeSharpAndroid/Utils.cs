@@ -38,6 +38,11 @@ static public class Utils
 	{
 		return Epoch.AddSeconds(unix);
 	}
+
+	static public bool EqualsIgnoreCase(this string s, string t)
+	{
+		return s.Equals(t, StringComparison.OrdinalIgnoreCase);
+	}
 }
 
 }

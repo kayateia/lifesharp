@@ -301,6 +301,15 @@ namespace LifeSharp
 			// aapt resource value: 0x7f02002a
 			public const int Icon = 2130837546;
 			
+			// aapt resource value: 0x7f02002b
+			public const int Search = 2130837547;
+			
+			// aapt resource value: 0x7f02002c
+			public const int TransferDown = 2130837548;
+			
+			// aapt resource value: 0x7f02002d
+			public const int TransferUp = 2130837549;
+			
 			static Drawable()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();

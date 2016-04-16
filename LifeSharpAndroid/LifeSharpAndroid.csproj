@@ -79,6 +79,8 @@
     <Compile Include="GalleryActivity.cs" />
     <Compile Include="StreamService.cs" />
     <Compile Include="Protocol.cs" />
+    <Compile Include="Notifications.cs" />
+    <Compile Include="MediaScannerWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -95,6 +97,9 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\Icon.png" />
     <AndroidResource Include="Resources\drawable-xxxhdpi\Icon.png" />
     <AndroidResource Include="Resources\layout\Gallery.axml" />
+    <AndroidResource Include="Resources\drawable-xhdpi\Search.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\TransferDown.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\TransferUp.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

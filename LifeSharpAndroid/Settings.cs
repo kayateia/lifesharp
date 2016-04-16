@@ -34,6 +34,8 @@ public class Settings
 		public const string LastCheck = "lastCheck";
 		public const string Enabled = "enabled";
 		public const string LastImageTimestamp = "lastImageTimestamp";
+		public const string Vibration = "vibration";
+		public const string Sounds = "sounds";
 	}
 
 	// Default time, in seconds, to set the "last timestamp" if none exists. This will
@@ -192,6 +194,34 @@ public class Settings
 		{
 			edit();
 			setLong(Prefs.LastImageTimestamp, value);
+		}
+	}
+
+	public bool vibration
+	{
+		get
+		{
+			return getBool(Prefs.Vibration, true);
+		}
+
+		set
+		{
+			edit();
+			setBool(Prefs.Vibration, value);
+		}
+	}
+
+	public bool sounds
+	{
+		get
+		{
+			return getBool(Prefs.Sounds, true);
+		}
+
+		set
+		{
+			edit();
+			setBool(Prefs.Sounds, value);
 		}
 	}
 }

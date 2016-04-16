@@ -15,6 +15,8 @@ using Android.Widget;
 using Android.Util;
 using System.Threading.Tasks;
 
+using Uri = Android.Net.Uri;
+
 namespace LifeSharp
 {
 
@@ -31,6 +33,8 @@ public class StreamService : ILifeSharpService
 	{
 		Log.Info(LogTag, "Doing new files check on server");
 
+		DateTimeOffset newCheckTime = DateTimeOffset.UtcNow;
+
 		var json = await Network.HttpGetToJsonAsync(Settings.BaseUrl + "api/stream/1/contents", settings.authToken);
 		Log.Info(LogTag, "Got back json: {0}", json);
 		var model = new Protocol.StreamContents(json);
@@ -40,17 +44,41 @@ public class StreamService : ILifeSharpService
 			return;
 		}
 
-		foreach (var img in model.images)
+		if (model.images.Length > 0)
 		{
-			string imgpath = Path.Combine(GetPath(img.userLogin), img.filename);
-			if (imgpath.Contains(".."))
+			// This will follow along behind our downloads and provide media server IDs that we
+			// can feed to a notification, so that when the user taps on it, it'll take them to
+			// that picture with their chosen app.
+			var scanner = new MediaScannerWrapper(context)
 			{
-				Log.Error(LogTag, String.Format("Image name '{0}' is invalid. Skipping.", img.filename));
-				continue;
-			}
-			Log.Info(LogTag, String.Format("Download image {0}/{1}", img.id, img.filename));
+				scanned = (string path, Uri uri, string message) =>
+				{
+					// The user directory will be the last path component. We can hash
+					// that and make a unique notification ID. This isn't guaranteed to be
+					// unique, but for our test purposes, it should work.
+					Notifications.NotifyDownload(context, 100, true, message, message, "", uri);
+				}
+			};
 
-			await Network.HttpDownloadAsync(Settings.BaseUrl + "api/image/get/" + img.id, settings.authToken, imgpath);
+			foreach (var img in model.images)
+			{
+				string imgpath = Path.Combine(GetPath(img.userLogin), img.filename);
+				if (imgpath.Contains(".."))
+				{
+					Log.Error(LogTag, String.Format("Image name '{0}' is invalid. Skipping.", img.filename));
+					continue;
+				}
+				Log.Info(LogTag, String.Format("Download image {0}/{1}", img.id, img.filename));
+
+				await Network.HttpDownloadAsync(Settings.BaseUrl + "api/image/get/" + img.id, settings.authToken, imgpath);
+				scanner.addFile(imgpath, "New picture from " + img.userLogin);
+			}
+
+			Log.Info(LogTag, "Finished downloads");
+
+			scanner.scan();
+			settings.lastCheck = newCheckTime;
+			settings.commit();
 		}
 
 		Log.Info(LogTag, "File check complete.");
@@ -80,7 +108,17 @@ public class StreamService : ILifeSharpService
 
 	public void kick(Context context, Settings settings)
 	{
-		Task.Run(() => doCheck(context, settings).Wait());
+		Task.Run(() =>
+		{
+			try
+			{
+				doCheck(context, settings).Wait();
+			}
+			catch (Exception e)
+			{
+				Log.Error(LogTag, "Exception during kick: {0}", e);
+			}
+		});
 	}
 }
 
