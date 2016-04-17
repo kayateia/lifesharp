@@ -28,8 +28,6 @@ public class MainActivity : Activity
 
 		Log.SetLogger(new LogAndroid());
 
-		LifeSharpService.Start(this);
-
 		// Set our view from the "main" layout resource
 		SetContentView(Resource.Layout.Main);
 
@@ -81,6 +79,16 @@ public class MainActivity : Activity
 		button.Click += delegate(object sender, EventArgs e) {
 			StartActivity(typeof(GalleryActivity));
 		};
+
+		if (!GCMRegistrationService.IsAvailable(this))
+		{
+			settings.enabled = false;
+			enabled.Checked = false;
+			return;
+		}
+		GCMRegistrationService.Start(this);
+
+		LifeSharpService.Start(this);
 	}
 }
 

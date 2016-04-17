@@ -139,8 +139,7 @@ static public class Network
 		};
 		JsonValue results = await HttpPostToJsonAsync(Settings.BaseUrl + "api/user/login", null, param);
 
-		bool success = results["success"];
-		if (success)
+		if (Protocol.Basic.Succeeded(results))
 		{
 			string token = results["token"];
 			Log.Info(LogTag, "Login results: {0}", token);
@@ -149,8 +148,38 @@ static public class Network
 		}
 		else
 		{
-			Log.Info(LogTag, "Login failed: {0}", results["error"]);
+			Log.Info(LogTag, "Login failed: {0}", Protocol.Basic.GetError(results));
 			return null;
+		}
+	}
+
+	/// <summary>
+	/// Registers the device with the LifeStream server for push notifications.
+	/// </summary>
+	/// <returns>True if we succeeded</returns>
+	/// <param name="authToken">Auth token from settings</param>
+	/// <param name="serviceType">Service type</param>
+	/// <param name="deviceId">Device unique identifier</param>
+	/// <param name="pushToken">Push service token</param>
+	static public async Task<bool> RegisterDevice(string authToken, Protocol.PushServiceType serviceType, string deviceId, string pushToken)
+	{
+		var param = new Dictionary<string, string>()
+		{
+			{ "id", deviceId },
+			{ "type", serviceType.ToString().ToLowerInvariant() },
+			{ "token", pushToken }
+		};
+		JsonValue results = await HttpPostToJsonAsync(Settings.BaseUrl + "api/user/register-device", authToken, param);
+
+		if (Protocol.Basic.Succeeded(results))
+		{
+			Log.Info(LogTag, "Successfully registered device with server");
+			return true;
+		}
+		else
+		{
+			Log.Info(LogTag, "Device registration failed: {0}", Protocol.Basic.GetError(results));
+			return false;
 		}
 	}
 }

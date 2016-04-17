@@ -29,6 +29,7 @@ public class Settings
 		public const string LastImageTimestamp = "lastImageTimestamp";
 		public const string Vibration = "vibration";
 		public const string Sounds = "sounds";
+		public const string GcmId = "gcmid";
 	}
 
 	// Default time, in seconds, to set the "last timestamp" if none exists. This will
@@ -215,6 +216,20 @@ public class Settings
 		{
 			edit();
 			setBool(Prefs.Sounds, value);
+		}
+	}
+
+	public string gcmId
+	{
+		get
+		{
+			return getString(Prefs.GcmId, "");
+		}
+
+		set
+		{
+			edit();
+			setString(Prefs.GcmId, value);
 		}
 	}
 }

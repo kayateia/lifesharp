@@ -12,6 +12,19 @@ using System.Json;
 namespace LifeSharp.Protocol
 {
 
+public class Basic
+{
+	static public bool Succeeded(JsonValue source)
+	{
+		return (bool)source["success"] == true;
+	}
+
+	static public string GetError(JsonValue source)
+	{
+		return (string)source["error"];
+	}
+}
+
 /// <summary>
 /// Represents the return from a Stream Contents REST call to the LifeStream server
 /// </summary>
@@ -56,6 +69,18 @@ public class StreamContents
 		public DateTimeOffset uploadTime;
 		public string comment;
 	}
+}
+
+/// <summary>
+/// Available types of push services that we might register for. Note that these are
+/// Google, Apple, and Microsoft, not Android, iOS, and Windows, because it's actually
+/// possible to e.g. use GCM on iOS.
+/// </summary>
+public enum PushServiceType
+{
+	Google,
+	Apple,
+	Microsoft
 }
 
 }
