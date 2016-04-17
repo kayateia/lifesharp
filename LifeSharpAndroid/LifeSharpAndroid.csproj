@@ -72,12 +72,9 @@
     <Compile Include="Settings.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="LifeSharpService.cs" />
-    <Compile Include="ImageQueue.cs" />
-    <Compile Include="ImageQueueAndroid.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="GalleryActivity.cs" />
     <Compile Include="StreamService.cs" />
-    <Compile Include="Protocol.cs" />
     <Compile Include="Notifications.cs" />
     <Compile Include="MediaScannerWrapper.cs" />
     <Compile Include="..\LifeSharpCore\Log.cs">
@@ -87,6 +84,13 @@
       <Link>Core\Network.cs</Link>
     </Compile>
     <Compile Include="LogAndroid.cs" />
+    <Compile Include="..\LifeSharpCore\ImageDatabase.cs">
+      <Link>Core\ImageDatabase.cs</Link>
+    </Compile>
+    <Compile Include="ImageDatabaseAndroid.cs" />
+    <Compile Include="..\LifeSharpCore\Protocol.cs">
+      <Link>Core\Protocol.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

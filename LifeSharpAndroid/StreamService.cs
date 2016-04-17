@@ -24,6 +24,8 @@ using System.Threading.Tasks;
 
 using Uri = Android.Net.Uri;
 
+using LifeSharp.Protocol;
+
 namespace LifeSharp
 {
 
@@ -67,6 +69,10 @@ public class StreamService : ILifeSharpService
 
 		if (model.images.Length > 0)
 		{
+			// The total number of images we're waiting for in the media scanner callback.
+			// This will be adjusted as we go for images we don't actually need to download.
+			int imageCount = model.images.Length;
+
 			// This will follow along behind our downloads and provide media server IDs that we
 			// can feed to a notification, so that when the user taps on it, it'll take them to
 			// that picture with their chosen app.
@@ -76,21 +82,28 @@ public class StreamService : ILifeSharpService
 			//
 			// We don't actually do a notification here until the last image, because otherwise
 			// the user might get a flood of notifications if they've been offline or whatever.
-			int imageCount = model.images.Length;
+			var completedImages = new Dictionary<string, int>();
+			int completedImagesTotal = 0;
 			var scanner = new MediaScannerWrapper(context)
 			{
-				scanned = (string path, Uri uri, string message, Protocol.StreamContents.Image imgdata) =>
+				scanned = (string path, Uri uri, Protocol.StreamContents.Image imgdata) =>
 				{
+					// Increment the count of per-user images.
+					if (!completedImages.ContainsKey(imgdata.userLogin))
+						completedImages[imgdata.userLogin] = 0;
+					++completedImages[imgdata.userLogin];
+					++completedImagesTotal;
+
+					// If this is the last image, we will push out a notification.
 					if (--imageCount == 0)
 					{
-						// We can hash the user login and make a unique notification ID. This will result in each
-						// other user getting a separate notification stack. This isn't guaranteed to be
-						// unique, but for our test purposes, it should work.
-						int hash = imgdata.userLogin.GetHashCode() % 100000;
-						Notifications.NotifyDownload(context, 100 + hash, true, message, message, "", uri);
+						string message = GetNotificationMessage(completedImages, completedImagesTotal);
+						Notifications.NotifyDownload(context, 100, true, message, message, "", uri);
 					}
 				}
 			};
+
+			IImageDatabase db = ImageDatabaseAndroid.GetSingleton(context);
 
 			foreach (var img in model.images)
 			{
@@ -99,14 +112,30 @@ public class StreamService : ILifeSharpService
 				if (imgpath.Contains(".."))
 				{
 					Log.Error(LogTag, String.Format("Image name '{0}' is invalid. Skipping.", img.filename));
+					--imageCount;
 					continue;
 				}
-				Log.Info(LogTag, String.Format("Download image {0}/{1} to {2}", img.id, img.filename, imgpath));
 
-				await Network.HttpDownloadAsync(Settings.BaseUrl + "api/image/get/" + img.id, settings.authToken, imgpath);
-				string message = String.Format("New picture{0} from {1}",
-					model.images.Length > 0 ? String.Format("s ({0})", model.images.Length) : "", img.userLogin);
-				scanner.addFile(imgpath, message, img);
+				if (db.getImageByUserAndFileName(img.userLogin, img.filename) != null)
+				{
+					Log.Info(LogTag, String.Format("Skipping image '{0}' as we already have it in our database.", img.filename));
+					--imageCount;
+					continue;
+				}
+
+				if (File.Exists(imgpath))
+				{
+					Log.Info(LogTag, String.Format("Skipping download of image '{0}' as we already seem to have the file.", img.filename));
+				}
+				else
+				{
+					Log.Info(LogTag, String.Format("Download image {0}/{1} to {2}", img.id, img.filename, imgpath));
+
+					await Network.HttpDownloadAsync(Settings.BaseUrl + "api/image/get/" + img.id, settings.authToken, imgpath);
+				}
+
+				db.addDownloadedFile(imgpath, img.filename, img.userLogin, img.uploadTime, img.comment);
+				scanner.addFile(imgpath, img);
 			}
 
 			scanner.scan();
@@ -118,9 +147,30 @@ public class StreamService : ILifeSharpService
 		Log.Info(LogTag, "File check complete.");
 	}
 
+	static string GetNotificationMessage(Dictionary<string, int> imageCounts, int imagesTotal)
+	{
+		string message = "Shouldn't Happen";
+		if (imageCounts.Count == 1)
+		{
+			var kvp = imageCounts.First();
+			message = String.Format("{0} new image{1} from {2}",
+				kvp.Value, kvp.Value == 1 ? "" : "s", kvp.Key);
+		}
+		else if (imageCounts.Count > 1)
+		{
+			var kvp = imageCounts.First();
+			message = String.Format("{0} new images, from {1} and {2} other{3}",
+				imagesTotal, kvp.Key, imageCounts.Count - 1,
+				imageCounts.Count == 2 ? "" : "s");
+		}
+
+		return message;
+	}
+
 	static string GetPath(string user)
 	{
 		// We make the last component "LifeStream_user" so that it will show up properly in gallery apps.
+		// string sdcard = context.GetExternalFilesDir(Android.OS.Environment.DirectoryPictures).AbsolutePath;
 		string sdcard = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;
 		string path = Path.Combine(sdcard, "Pictures", "LifeSharp", "LifeStream_" + user);
 		if (!Directory.Exists(path))
