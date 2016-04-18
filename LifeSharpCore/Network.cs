@@ -134,10 +134,9 @@ static public class Network
 	{
 		var param = new Dictionary<string, string>()
 		{
-			{ "login", settings.userName },
 			{ "password", settings.password }
 		};
-		JsonValue results = await HttpPostToJsonAsync(Settings.BaseUrl + "api/user/login", null, param);
+		JsonValue results = await HttpPostToJsonAsync(Settings.BaseUrl + "api/user/login/" + settings.userName, null, param);
 
 		if (Protocol.Basic.Succeeded(results))
 		{
