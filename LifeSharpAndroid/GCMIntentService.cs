@@ -101,6 +101,7 @@ public class GCMIntentService : GcmListenerService
 	public override void OnMessageReceived(string from, Android.OS.Bundle data)
 	{
 		Log.Info(LogTag, "Received intent from " + from + ": " + data.GetString("message"));
+		LifeSharpService.Start(this);
 	}
 }
 
