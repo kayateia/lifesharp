@@ -19,7 +19,6 @@ namespace LifeSharp
 public class GCMRegistrationService : IntentService
 {
 	const string LogTag = "LifeSharp/GCMRegistrationService";
-	const string SenderKey = "<insert your GCM key here>";
 
 	object s_locker = new object();
 
@@ -61,7 +60,7 @@ public class GCMRegistrationService : IntentService
 			lock (s_locker)
 			{
 				var instanceId = InstanceID.GetInstance(this);
-				var token = instanceId.GetToken(SenderKey, GoogleCloudMessaging.InstanceIdScope, null);
+				var token = instanceId.GetToken(Config.GcmNotificationKey, GoogleCloudMessaging.InstanceIdScope, null);
 
 				Log.Info(LogTag, "GCM Reg token: " + token);
 				var settings = new Settings(this);

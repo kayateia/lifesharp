@@ -92,6 +92,7 @@
       <Link>Core\Protocol.cs</Link>
     </Compile>
     <Compile Include="GCMIntentService.cs" />
+    <Compile Include="Config.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

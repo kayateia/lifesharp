@@ -36,9 +36,6 @@ public class Settings
 	// cause us to auto-upload anything from one day ago.
 	public const int DefaultDuration = 1 * 24 * 60 * 60;
 
-	// Our base URL if nothing else is configured.
-	public const string DefaultBaseUrl = "https://fia.isisview.org/lifestream/";
-
 	Context _context;
 	ISharedPreferences _settings;
 	ISharedPreferencesEditor _editor;
@@ -49,7 +46,7 @@ public class Settings
 	{
 		get
 		{
-			return DefaultBaseUrl;
+			return Config.BaseUrl;
 		}
 	}
 
