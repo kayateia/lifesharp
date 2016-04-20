@@ -33,6 +33,7 @@ public class PhotoMediaObserver : ContentObserver
 		// var newMedia = new List<Media>();
 		long lastImageTimestamp = _settings.lastImageProcessedTimestamp;
 		long newLastTimestamp = -1;
+		bool anyNew = false;
 
 		var uri = MediaStore.Images.Media.ExternalContentUri;
 		using (var cursor = _context.ContentResolver.Query(uri, null, null, null, "date_added DESC"))
@@ -52,7 +53,16 @@ public class PhotoMediaObserver : ContentObserver
 
 				if (timestamp > lastImageTimestamp)
 				{
-					Log.Info(LogTag, "Found file: {0} {1}", filePath, mimeType);
+					if (StreamService.IsOneOfOurs(filePath))
+					{
+						Log.Info(LogTag, "{0} is one of ours; skipping", filePath);
+					}
+					else
+					{
+						Log.Info(LogTag, "Found file: {0} {1}", filePath, mimeType);
+						ImageDatabaseAndroid.GetSingleton(_context).addToUploadQueue(filePath, DateTimeOffset.UtcNow.AddMinutes(1), "");
+						anyNew = true;
+					}
 				}
 			}
 		}
@@ -63,6 +73,10 @@ public class PhotoMediaObserver : ContentObserver
 			_settings.lastImageProcessedTimestamp = newLastTimestamp;
 			_settings.commit();
 		}
+
+		// If we found anything new, kick our services to get the pipeline moving.
+		if (anyNew)
+			LifeSharpService.Start(_context);
 	}
 }
 

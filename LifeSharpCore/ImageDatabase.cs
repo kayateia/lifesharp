@@ -47,7 +47,7 @@ public interface IImageDatabase
 	/// Returns a set of image specs that need processing. They will not be
 	/// removed from the queue until markProcessed() has been called on each.
 	/// </summary>
-	Image[] getItemsToProcess();
+	Image[] getItemsToScale();
 
 	/// <summary>
 	/// Deletes an image by ID. Any associated image on disk will also be deleted.

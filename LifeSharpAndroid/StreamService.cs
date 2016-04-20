@@ -179,6 +179,14 @@ public class StreamService : ILifeSharpService
 		return path;
 	}
 
+	// Returns true if the path represents an image we downloaded.
+	public static bool IsOneOfOurs(string imagePath)
+	{
+		string sdcard = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;
+		string path = Path.Combine(sdcard, "Pictures", "LifeSharp");
+		return imagePath.StartsWith(path);
+	}
+
 	public void start(Context context, Settings settings)
 	{
 		Log.Info(LogTag, "Started stream service");

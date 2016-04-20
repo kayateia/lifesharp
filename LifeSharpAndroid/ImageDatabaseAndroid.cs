@@ -202,13 +202,13 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 		});
 	}
 
-	public Image[] getItemsToProcess()
+	public Image[] getItemsToScale()
 	{
-		return performReadable("getItemsToProcess", (db) =>
+		return performReadable("getItemsToScale", (db) =>
 		{
 			using (ICursor cursor = db.Query(TableName,
 				AllColumns,
-				null, null,
+				"state=" + (int)Image.State.NewForUpload, null,
 				null, null, KeyQueuestamp))
 			{
 				if (!cursor.MoveToFirst())

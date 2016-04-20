@@ -6,18 +6,19 @@
 	Please see the file LICENSE for more info.
  */
 
+using System;
+using System.IO;
+using Android.Content;
+using Android.Graphics;
+using Android.Media;
+
+using Path = System.IO.Path;
+
 namespace LifeSharp
 {
-using System;
-using Android.App;
-using Android.Content;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Android.OS;
-using Android.Util;
 
-public class CaptureService : Service
+[LifeSharpService]
+public class CaptureService : ILifeSharpService
 {
 	const string LogTag = "LifeSharp/CaptureService";
 
@@ -25,21 +26,113 @@ public class CaptureService : Service
 	{
 	}
 
-	public override IBinder OnBind(Intent intent)
+	public void start(Context context, Settings settings)
 	{
-		return null;
+		checkForNewImages(context, settings);
 	}
 
-	public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
+	public void stop(Context context, Settings settings)
 	{
-		Log.Info(LogTag, "test");
-		checkForNewImages();
-		return StartCommandResult.NotSticky;
 	}
 
-	void checkForNewImages()
+	public void kick(Context context, Settings settings)
 	{
-		
+		checkForNewImages(context, settings);
+	}
+
+	void checkForNewImages(Context context, Settings settings)
+	{
+		Log.Info(LogTag, "Checking for new images to scale/etc/send");
+
+		var db = ImageDatabaseAndroid.GetSingleton(context);
+		Image[] images = db.getItemsToScale();
+
+		foreach (Image i in images)
+		{
+			string destfn = GetThumbnailPath(context, i);
+			scaleImage(i.sourcePath, destfn);
+			db.markReadyToSend(i.id);
+		}
+	}
+
+	void scaleImage(string source, string dest)
+	{
+		Log.Info(LogTag, "Scaling image from {0} to {1}", source, dest);
+
+		// Open once to get the file size.
+		var opts = new BitmapFactory.Options()
+		{
+			InJustDecodeBounds = true
+		};
+		BitmapFactory.DecodeFile(source, opts);
+
+		// Also verify the image orientation. Some phones like to set EXIF instead of rotating the pixels.
+		var exif = new ExifInterface(source);
+		int orientation = exif.GetAttributeInt(ExifInterface.TagOrientation, (int)Orientation.Normal);
+		int rotate = 0;
+		switch (orientation)
+		{
+			case (int)Orientation.Rotate270:
+				rotate = 270;
+				break;
+			case (int)Orientation.Rotate180:
+				rotate = 180;
+				break;
+			case (int)Orientation.Rotate90:
+				rotate = 90;
+				break;
+		}
+
+		// Make this configurable again later.
+		const int largestSize = 800;
+
+		// Figure out the target size;
+		int width = -1, height = -1;
+		if (opts.OutWidth > largestSize || opts.OutHeight > largestSize)
+		{
+			if (opts.OutWidth > opts.OutHeight)
+			{
+				width = largestSize;
+				height = opts.OutHeight * width / opts.OutWidth;
+			}
+			else
+			{
+				height = largestSize;
+				width = opts.OutWidth * height / opts.OutHeight;
+			}
+		}
+
+		Bitmap image = BitmapFactory.DecodeFile(source);
+		image = Bitmap.CreateScaledBitmap(image, width, height, true);
+
+		// Do rotation if needed.
+		if (rotate != 0)
+		{
+			Log.Info(LogTag, "{0}: rotation by {1}", source, rotate);
+			var matrix = new Matrix();
+			matrix.PreRotate(rotate);
+			image = Bitmap.CreateBitmap(image, 0, 0, image.Width, image.Height, matrix, true);
+		}
+
+		using (FileStream fs = File.OpenWrite(dest))
+			image.Compress(Bitmap.CompressFormat.Jpeg, 70, fs);
+	}
+
+	static string GetThumbnailPath(Context context, Image img)
+	{
+		return Path.Combine(GetUserPath(context), img.filename);
+	}
+
+	static string GetUserPath(Context context)
+	{
+		// This is the app-private path. We can put our thumbnails in there since there's no need
+		// to share them out to the gallery or anything.
+		string sdcard = context.GetExternalFilesDir(Android.OS.Environment.DirectoryPictures).AbsolutePath;
+		string p = Path.Combine(sdcard, "Thumbnails");
+		if (!Directory.Exists(p))
+			Directory.CreateDirectory(p);
+
+		return p;
 	}
 }
 
