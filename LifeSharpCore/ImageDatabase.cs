@@ -44,12 +44,6 @@ public interface IImageDatabase
 	Image getImageByUserAndFileName(string userLogin, string filename);
 
 	/// <summary>
-	/// Returns a set of image specs that need processing. They will not be
-	/// removed from the queue until markProcessed() has been called on each.
-	/// </summary>
-	Image[] getItemsToScale();
-
-	/// <summary>
 	/// Returns a set of image specs that need to be uploaded. They will not be
 	/// removed from the queue until markSent() has been called on each.
 	/// </summary>
@@ -59,12 +53,6 @@ public interface IImageDatabase
 	/// Deletes an image by ID. Any associated image on disk will also be deleted.
 	/// </summary>
 	void deleteImage(int id);
-
-	/// <summary>
-	/// Pass in an Image.id that was returned from getItemToProcess() above, and this
-	/// marks it as ready to send. You must do this after each item you've processed.
-	/// </summary>
-	void markReadyToSend(int id);
 
 	/// <summary>
 	/// Pass in an Image.id, and this marks it as sent and completed.
@@ -86,11 +74,6 @@ public class Image
 		/// The image was just placed in the queue from the media scanner
 		/// </summary>
 		NewForUpload = 0,
-
-		/// <summary>
-		/// The image is scaled and ready to send; waiting on send timeout
-		/// </summary>
-		ReadyToSend = 1,
 
 		/// <summary>
 		/// The image was sent to the server and no longer needs any attention.

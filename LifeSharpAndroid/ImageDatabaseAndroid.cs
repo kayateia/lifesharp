@@ -14,6 +14,7 @@ using Android.Database;
 using Android.Util;
 
 using Path = System.IO.Path;
+using System.Globalization;
 
 namespace LifeSharp
 {
@@ -202,13 +203,15 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 		});
 	}
 
-	Image[] getItemsForState(string func, Image.State state)
+	public Image[] getItemsToUpload()
 	{
-		return performReadable(func, (db) =>
+		return performReadable("getItemsToUpload", (db) =>
 		{
 			using (ICursor cursor = db.Query(TableName,
 				AllColumns,
-				"state=" + (int)state, null,
+				KeyState + "=" + (int)Image.State.NewForUpload
+					+ " and " + KeySendTimeout + " <= ?",
+				new string[] { Utils.UnixNow().ToString(CultureInfo.InvariantCulture) },
 				null, null, KeyQueuestamp))
 			{
 				if (!cursor.MoveToFirst())
@@ -224,16 +227,6 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 				return rv;
 			}
 		});
-	}
-
-	public Image[] getItemsToScale()
-	{
-		return getItemsForState("getItemsToScale", Image.State.NewForUpload);
-	}
-
-	public Image[] getItemsToUpload()
-	{
-		return getItemsForState("getItemsToUpload", Image.State.ReadyToSend);
 	}
 
 	static string[] AllColumns
@@ -286,16 +279,6 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 			string scaled = getScaledPath(oldImage);
 			if (File.Exists(scaled))
 				File.Delete(scaled);
-		});
-	}
-
-	public void markReadyToSend(int id)
-	{
-		performWritable("markReadyToSend", (db) =>
-		{
-			ContentValues values = new ContentValues();
-			values.Put(KeyState, (int)Image.State.ReadyToSend);
-			db.Update(TableName, values, "rowid=?", new string[] { id.ToString() });
 		});
 	}
 

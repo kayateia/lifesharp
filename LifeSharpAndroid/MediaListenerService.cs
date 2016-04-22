@@ -60,7 +60,7 @@ public class PhotoMediaObserver : ContentObserver
 					else
 					{
 						Log.Info(LogTag, "Found file: {0} {1}", filePath, mimeType);
-						ImageDatabaseAndroid.GetSingleton(_context).addToUploadQueue(filePath, DateTimeOffset.UtcNow.AddMinutes(1), "");
+						ImageDatabaseAndroid.GetSingleton(_context).addToUploadQueue(filePath, DateTimeOffset.UtcNow/*.AddMinutes(1)*/, "");
 						anyNew = true;
 					}
 				}

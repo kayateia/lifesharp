@@ -67,7 +67,6 @@
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CaptureService.cs" />
     <Compile Include="MediaListenerService.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="MainActivity.cs" />
