@@ -30,24 +30,54 @@ namespace LifeSharp
 {
 
 /// <summary>
-/// Implements a streaming service for new images, pulling them down from the server as they
+/// Implements a download service for new images, pulling them down from the server as they
 /// become available, and providing notifications to the user that new images are available.
 /// </summary>
 [LifeSharpService]
-public class StreamService : ILifeSharpService
+public class DownloadService : ILifeSharpService
 {
-	const string LogTag = "LifeSharp/StreamService";
+	const string LogTag = "LifeSharp/DownloadService";
 	object _lock = new object();
 
-	public StreamService()
+	public DownloadService()
 	{
+	}
+
+	public void start(Context context, Settings settings)
+	{
+		Log.Info(LogTag, "Started stream service");
+		kick(context, settings);
+	}
+
+	public void stop(Context context, Settings settings)
+	{
+		Log.Info(LogTag, "Stopped stream service");
+	}
+
+	public void kick(Context context, Settings settings)
+	{
+		Task.Run(() =>
+		{
+			// Only allow one background instance at a time, or we could end up with duplicate downloads.
+			lock (_lock)
+			{
+				try
+				{
+					doCheck(context, settings).Wait();
+				}
+				catch (Exception e)
+				{
+					Log.Error(LogTag, "Exception during kick: {0}", e);
+				}
+			}
+		});
 	}
 
 	async Task doCheck(Context context, Settings settings)
 	{
 		if (!settings.enabled || settings.authToken.IsNullOrEmpty())
 		{
-			Log.Info(LogTag, "App is disabled or not logged in; skipping stream service check");
+			Log.Info(LogTag, "App is disabled or not logged in; skipping download service check");
 			return;
 		}
 
@@ -194,36 +224,6 @@ public class StreamService : ILifeSharpService
 		string sdcard = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;
 		string path = Path.Combine(sdcard, "Pictures", "LifeSharp");
 		return imagePath.StartsWith(path);
-	}
-
-	public void start(Context context, Settings settings)
-	{
-		Log.Info(LogTag, "Started stream service");
-		kick(context, settings);
-	}
-
-	public void stop(Context context, Settings settings)
-	{
-		Log.Info(LogTag, "Stopped stream service");
-	}
-
-	public void kick(Context context, Settings settings)
-	{
-		Task.Run(() =>
-		{
-			// Only allow one background instance at a time, or we could end up with duplicate downloads.
-			lock (_lock)
-			{
-				try
-				{
-					doCheck(context, settings).Wait();
-				}
-				catch (Exception e)
-				{
-					Log.Error(LogTag, "Exception during kick: {0}", e);
-				}
-			}
-		});
 	}
 }
 

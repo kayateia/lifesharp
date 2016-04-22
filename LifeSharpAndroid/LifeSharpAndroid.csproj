@@ -73,7 +73,6 @@
     <Compile Include="LifeSharpService.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="GalleryActivity.cs" />
-    <Compile Include="StreamService.cs" />
     <Compile Include="Notifications.cs" />
     <Compile Include="MediaScannerWrapper.cs" />
     <Compile Include="..\LifeSharpCore\Log.cs">
@@ -93,6 +92,7 @@
     <Compile Include="GCMIntentService.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="UploadService.cs" />
+    <Compile Include="DownloadService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

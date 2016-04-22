@@ -51,21 +51,26 @@ public class UploadService : ILifeSharpService
 			// Only allow one background instance at a time. Otherwise we end up with duplicate sends.
 			lock (_lock)
 			{
-				Log.Info(LogTag, "Checking for new images to scale/etc/send");
-
-				var db = ImageDatabaseAndroid.GetSingleton(context);
-				Image[] images = db.getItemsToUpload();
-
-				foreach (Image i in images)
-				{
-					string destfn = GetThumbnailPath(context, i);
-					if (!File.Exists(destfn))
-						scaleImage(i.sourcePath, destfn);
-					if (uploadImage(i, destfn, settings.authToken).Result)
-						db.markSent(i.id);
-				}
+				checkForNewImagesInner(context, settings);
 			}
 		});
+	}
+
+	void checkForNewImagesInner(Context context, Settings settings)
+	{
+		Log.Info(LogTag, "Checking for new images to scale/etc/send");
+
+		var db = ImageDatabaseAndroid.GetSingleton(context);
+		Image[] images = db.getItemsToUpload();
+
+		foreach (Image i in images)
+		{
+			string destfn = GetThumbnailPath(context, i);
+			if (!File.Exists(destfn))
+				scaleImage(i.sourcePath, destfn);
+			if (uploadImage(i, destfn, settings.authToken).Result)
+				db.markSent(i.id);
+		}
 	}
 
 	void scaleImage(string source, string dest)

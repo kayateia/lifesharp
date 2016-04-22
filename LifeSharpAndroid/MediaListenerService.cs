@@ -53,7 +53,7 @@ public class PhotoMediaObserver : ContentObserver
 
 				if (timestamp > lastImageTimestamp)
 				{
-					if (StreamService.IsOneOfOurs(filePath))
+					if (DownloadService.IsOneOfOurs(filePath))
 					{
 						Log.Info(LogTag, "{0} is one of ours; skipping", filePath);
 					}
@@ -76,7 +76,9 @@ public class PhotoMediaObserver : ContentObserver
 
 		// If we found anything new, kick our services to get the pipeline moving.
 		if (anyNew)
-			LifeSharpService.Start(_context);
+		{
+			LifeSharpService.Instance.kickService<UploadService>();
+		}
 	}
 }
 

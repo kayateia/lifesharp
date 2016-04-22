@@ -25,7 +25,7 @@ sealed class LifeSharpServiceAttribute : Attribute
 }
 
 // Implemented by LifeSharp services.
-interface ILifeSharpService
+public interface ILifeSharpService
 {
 	void start(Context context, Settings settings);
 	void stop(Context context, Settings settings);
@@ -36,6 +36,8 @@ interface ILifeSharpService
 public class LifeSharpService : Service
 {
 	const string LogTag = "LifeSharp/LifeSharpService";
+
+	static LifeSharpService s_instance;
 	bool _initted = false;
 	static ILifeSharpService[] s_services;
 	Settings _settings;
@@ -51,6 +53,14 @@ public class LifeSharpService : Service
 		context.StartService(lsServiceIntent);
 	}
 
+	static public LifeSharpService Instance
+	{
+		get
+		{
+			return s_instance;
+		}
+	}
+
 	public LifeSharpService()
 	{
 	}
@@ -62,21 +72,18 @@ public class LifeSharpService : Service
 
 	public override StartCommandResult OnStartCommand(Android.Content.Intent intent, StartCommandFlags flags, int startId)
 	{
-		// If we've already been initted, then just do a kick and bail.
-		if (_initted)
+		if (!_initted)
 		{
-			Log.Info(LogTag, "Kicked LifeSharp service");
-			kickServices(this.ApplicationContext, _settings);
-			return StartCommandResult.Sticky;
+			Log.Info(LogTag, "Started LifeSharp service");
+			s_instance = this;
+			_settings = new Settings(this.ApplicationContext);
+
+			foreach (var service in s_services)
+				service.start(this.ApplicationContext, _settings);
+
+			_initted = true;
 		}
 
-		Log.Info(LogTag, "Started LifeSharp service");
-		_settings = new Settings(this.ApplicationContext);
-
-		foreach (var service in s_services)
-			service.start(this.ApplicationContext, _settings);
-
-		_initted = true;
 		return StartCommandResult.Sticky;
 	}
 
@@ -92,13 +99,15 @@ public class LifeSharpService : Service
 	}
 
 	/// <summary>
-	/// Gives all our services a swift kick in the okole. (i.e. tells them to do processing if they need to)
+	/// Gives a service a swift kick in the okole. (i.e. tells them to do processing if they need to)
 	/// </summary>
-	void kickServices(Context context, Settings settings)
+	public void kickService<T>() where T : ILifeSharpService
 	{
 		foreach (var service in s_services)
-			service.kick(context, settings);
+			if (service is T)
+				service.kick(this, _settings);
 	}
 }
+
 }
 
