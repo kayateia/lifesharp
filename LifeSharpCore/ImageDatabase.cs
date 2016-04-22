@@ -50,6 +50,12 @@ public interface IImageDatabase
 	Image[] getItemsToScale();
 
 	/// <summary>
+	/// Returns a set of image specs that need to be uploaded. They will not be
+	/// removed from the queue until markSent() has been called on each.
+	/// </summary>
+	Image[] getItemsToUpload();
+
+	/// <summary>
 	/// Deletes an image by ID. Any associated image on disk will also be deleted.
 	/// </summary>
 	void deleteImage(int id);

@@ -37,12 +37,16 @@ public class LifeSharpService : Service
 {
 	const string LogTag = "LifeSharp/LifeSharpService";
 	bool _initted = false;
-	ILifeSharpService[] _services;
+	static ILifeSharpService[] s_services;
 	Settings _settings;
 
 	static public void Start(Context context)
 	{
 		Log.Info(LogTag, "LifeSharp Service Start request");
+
+		if (s_services == null)
+			s_services = GetServices().ToArray();
+
 		var lsServiceIntent = new Intent(context, typeof(LifeSharpService));
 		context.StartService(lsServiceIntent);
 	}
@@ -69,8 +73,7 @@ public class LifeSharpService : Service
 		Log.Info(LogTag, "Started LifeSharp service");
 		_settings = new Settings(this.ApplicationContext);
 
-		_services = getServices().ToArray();
-		foreach (var service in _services)
+		foreach (var service in s_services)
 			service.start(this.ApplicationContext, _settings);
 
 		_initted = true;
@@ -81,7 +84,7 @@ public class LifeSharpService : Service
 	/// Find all the types in this assembly with the LifeSharp service attribute.
 	/// Create them and return the instances.
 	/// </summary>
-	IEnumerable<ILifeSharpService> getServices()
+	static IEnumerable<ILifeSharpService> GetServices()
 	{
 		return typeof(LifeSharpService).Assembly.GetTypes()
 			.Where(t => t.GetCustomAttribute<LifeSharpServiceAttribute>() != null)
@@ -93,7 +96,7 @@ public class LifeSharpService : Service
 	/// </summary>
 	void kickServices(Context context, Settings settings)
 	{
-		foreach (var service in _services)
+		foreach (var service in s_services)
 			service.kick(context, settings);
 	}
 }

@@ -95,6 +95,51 @@ static public class Network
 	}
 
 	/// <summary>
+	/// Posts a file and other parameter data to the specified URL, and returns JSON output.
+	/// </summary>
+	/// <returns>The JSON data</returns>
+	/// <param name="url">The URL to POST to</param>
+	/// <param name="token">The authentication token to use</param>
+	/// <param name="param">POST parameters</param>
+	/// <param name="fileparam">The POST parameter name for the file</param>
+	/// <param name="filename">The file to post</param>
+	static public async Task<JsonValue> HttpPostFileToJsonAsync(string url, string token, IDictionary<string, string> param, string fileparam, string filename)
+	{
+		Log.Info(LogTag, "Performing HttpPostFileToJsonAsync, URL {0}", url);
+		using (HttpClient client = new HttpClient())
+		using (FileStream file = File.OpenRead(filename))
+		using (var content = new MultipartFormDataContent("----Upload" + Utils.UnixNow()))
+		{
+			var streamContent = new StreamContent(file);
+			streamContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/jpeg");
+			content.Add(streamContent, fileparam, Path.GetFileName(filename));
+
+			foreach (var kvp in param)
+			{
+				var stringStream = new MemoryStream(Encoding.UTF8.GetBytes(kvp.Value));
+				var stringContent = new StreamContent(stringStream);
+				content.Add(stringContent, kvp.Key);
+			}
+
+			var request = new HttpRequestMessage()
+			{
+				RequestUri = new System.Uri(url),
+				Method = HttpMethod.Post,
+				Content = content
+			};
+			if (token != null)
+				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+			using (HttpResponseMessage response = await client.SendAsync(request))
+			using (HttpContent responseContent = response.Content)
+			{
+				JsonValue jsonDoc = JsonObject.Load(await responseContent.ReadAsStreamAsync());
+				return jsonDoc;
+			}
+		}
+	}
+
+	/// <summary>
 	/// Downloads the specified URL into a JSON output.
 	/// </summary>
 	/// <returns>The JSON data</returns>

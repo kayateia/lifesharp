@@ -93,6 +93,7 @@
     </Compile>
     <Compile Include="GCMIntentService.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="UploadService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

@@ -202,13 +202,13 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 		});
 	}
 
-	public Image[] getItemsToScale()
+	Image[] getItemsForState(string func, Image.State state)
 	{
-		return performReadable("getItemsToScale", (db) =>
+		return performReadable(func, (db) =>
 		{
 			using (ICursor cursor = db.Query(TableName,
 				AllColumns,
-				"state=" + (int)Image.State.NewForUpload, null,
+				"state=" + (int)state, null,
 				null, null, KeyQueuestamp))
 			{
 				if (!cursor.MoveToFirst())
@@ -224,6 +224,16 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 				return rv;
 			}
 		});
+	}
+
+	public Image[] getItemsToScale()
+	{
+		return getItemsForState("getItemsToScale", Image.State.NewForUpload);
+	}
+
+	public Image[] getItemsToUpload()
+	{
+		return getItemsForState("getItemsToUpload", Image.State.ReadyToSend);
 	}
 
 	static string[] AllColumns

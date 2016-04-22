@@ -37,6 +37,7 @@ namespace LifeSharp
 public class StreamService : ILifeSharpService
 {
 	const string LogTag = "LifeSharp/StreamService";
+	object _lock = new object();
 
 	public StreamService()
 	{
@@ -107,6 +108,14 @@ public class StreamService : ILifeSharpService
 
 			foreach (var img in model.images)
 			{
+				// If it's our image, don't download it.
+				if (img.userLogin == settings.userName)
+				{
+					Log.Info(LogTag, String.Format("Image {0} was ours; skipping download", img.filename));
+					--imageCount;
+					continue;
+				}
+
 				// Figure out where the image will go. Do a sanity check to make sure it doesn't contain an exploit.
 				string imgpath = Path.Combine(GetPath(img.userLogin), img.filename);
 				if (imgpath.Contains(".."))
@@ -202,13 +211,17 @@ public class StreamService : ILifeSharpService
 	{
 		Task.Run(() =>
 		{
-			try
+			// Only allow one background instance at a time, or we could end up with duplicate downloads.
+			lock (_lock)
 			{
-				doCheck(context, settings).Wait();
-			}
-			catch (Exception e)
-			{
-				Log.Error(LogTag, "Exception during kick: {0}", e);
+				try
+				{
+					doCheck(context, settings).Wait();
+				}
+				catch (Exception e)
+				{
+					Log.Error(LogTag, "Exception during kick: {0}", e);
+				}
 			}
 		});
 	}

@@ -8,6 +8,7 @@
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using Android.Content;
 using Android.Graphics;
 using Android.Media;
@@ -21,6 +22,7 @@ namespace LifeSharp
 public class CaptureService : ILifeSharpService
 {
 	const string LogTag = "LifeSharp/CaptureService";
+	object _lock = new object();
 
 	public CaptureService()
 	{
@@ -42,17 +44,27 @@ public class CaptureService : ILifeSharpService
 
 	void checkForNewImages(Context context, Settings settings)
 	{
-		Log.Info(LogTag, "Checking for new images to scale/etc/send");
-
-		var db = ImageDatabaseAndroid.GetSingleton(context);
-		Image[] images = db.getItemsToScale();
-
-		foreach (Image i in images)
+		Task.Run(() =>
 		{
-			string destfn = GetThumbnailPath(context, i);
-			scaleImage(i.sourcePath, destfn);
-			db.markReadyToSend(i.id);
-		}
+			// Only allow one background instance at a time, or we could end up with duplicate scaling.
+			lock (_lock)
+			{
+				Log.Info(LogTag, "Checking for new images to scale/etc/send");
+
+				var db = ImageDatabaseAndroid.GetSingleton(context);
+				Image[] images = db.getItemsToScale();
+
+				foreach (Image i in images)
+				{
+					string destfn = GetThumbnailPath(context, i);
+					scaleImage(i.sourcePath, destfn);
+					db.markReadyToSend(i.id);
+				}
+
+				if (images.Length > 0)
+					LifeSharpService.Start(context);
+			}
+		});
 	}
 
 	void scaleImage(string source, string dest)
@@ -118,7 +130,7 @@ public class CaptureService : ILifeSharpService
 			image.Compress(Bitmap.CompressFormat.Jpeg, 70, fs);
 	}
 
-	static string GetThumbnailPath(Context context, Image img)
+	public static string GetThumbnailPath(Context context, Image img)
 	{
 		return Path.Combine(GetUserPath(context), img.filename);
 	}
