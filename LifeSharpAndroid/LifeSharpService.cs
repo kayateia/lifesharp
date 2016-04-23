@@ -110,7 +110,7 @@ public class LifeSharpService : Service
 	{
 		foreach (var service in s_services)
 			if (service is T)
-				service.kick(this, _settings);
+				service.kick(this.ApplicationContext, _settings);
 	}
 }
 
