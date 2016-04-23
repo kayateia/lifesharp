@@ -23,7 +23,7 @@ static public class Config
 	/// <summary>
 	/// GCM notification key - this is typically a string of digits.
 	/// </summary>
-	public const string GcmNotificationKey = "GCMdigitsHere";
+	public const string GcmNotificationKey = null;
 }
 
 }

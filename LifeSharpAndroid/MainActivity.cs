@@ -80,13 +80,16 @@ public class MainActivity : Activity
 			StartActivity(typeof(GalleryActivity));
 		};
 
-		if (!GCMRegistrationService.IsAvailable(this))
+		if (Config.GcmNotificationKey != null)
 		{
-			settings.enabled = false;
-			enabled.Checked = false;
-			return;
+			if (!GCMRegistrationService.IsAvailable(this))
+			{
+				settings.enabled = false;
+				enabled.Checked = false;
+				return;
+			}
+			GCMRegistrationService.Start(this);
 		}
-		GCMRegistrationService.Start(this);
 
 		LifeSharpService.Start(this);
 	}
