@@ -83,6 +83,11 @@ public class LifeSharpService : Service
 
 			_initted = true;
 		}
+		else
+		{
+			foreach (var service in s_services)
+				service.kick(this.ApplicationContext, _settings);
+		}
 
 		return StartCommandResult.Sticky;
 	}

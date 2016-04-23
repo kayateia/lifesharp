@@ -46,8 +46,13 @@ public class MainActivity : Activity
 
 		// Wire up UI events.
 		enabled.CheckedChange += delegate {
+			bool oldSetting = settings.enabled;
+
 			settings.enabled = enabled.Checked;
 			settings.commit();
+
+			if (!oldSetting)
+				LifeSharpService.Start(this);
 		};
 		/*uploadNotifications.CheckedChange += delegate {
 			settings.uploadNotifications = uploadNotifications.Checked;
@@ -65,6 +70,8 @@ public class MainActivity : Activity
 				string result = await Network.Login(settings);
 				statusLabel.Text = result;
 				settings.authToken = result;
+				settings.enabled = true;
+				enabled.Checked = true;
 				settings.commit();
 
 				LifeSharpService.Start(this);
@@ -91,7 +98,8 @@ public class MainActivity : Activity
 			GCMRegistrationService.Start(this);
 		}
 
-		LifeSharpService.Start(this);
+		if (settings.enabled)
+			LifeSharpService.Start(this);
 	}
 }
 
