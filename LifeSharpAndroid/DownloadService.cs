@@ -90,7 +90,7 @@ public class DownloadService : ILifeSharpService
 		DateTimeOffset newCheckTime = DateTimeOffset.UtcNow;
 
 		// Call to the server to get our list of images to pull.
-		var json = await Network.HttpGetToJsonAsync(Settings.BaseUrl + "api/stream/1/contents", settings.authToken);
+		var json = await Network.HttpGetToJsonAsync(Settings.BaseUrl + "api/stream/" + settings.defaultStream + "/contents", settings.authToken);
 		var model = new Protocol.StreamContents(json);
 		if (model.error != null)
 		{

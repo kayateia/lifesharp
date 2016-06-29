@@ -226,6 +226,26 @@ static public class Network
 			return false;
 		}
 	}
+
+	/// <summary>
+	/// Gets a list of all available streams from the LifeStream server.
+	/// </summary>
+	/// <returns>A StreamList object containing an error or the list of streams.</returns>
+	static public async Task<Protocol.StreamList> GetStreamList(string authToken)
+	{
+		JsonValue results = await HttpGetToJsonAsync(Settings.BaseUrl + "api/stream/list", authToken);
+		var streams = new Protocol.StreamList(results);
+		if (streams.error.IsNullOrEmpty())
+		{
+			Log.Info(LogTag, "Successfully queried for {0} streams", streams.streams.Length);
+		}
+		else
+		{
+			Log.Error(LogTag, "Could not query for streams: {0}", streams.error);
+		}
+
+		return streams;
+	}
 }
 
 }

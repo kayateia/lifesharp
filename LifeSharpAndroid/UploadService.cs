@@ -68,7 +68,7 @@ public class UploadService : ILifeSharpService
 			string destfn = GetThumbnailPath(context, i);
 			if (!File.Exists(destfn))
 				scaleImage(i.sourcePath, destfn);
-			if (uploadImage(i, destfn, settings.authToken).Result)
+			if (uploadImage(i, destfn, settings.authToken, (int)settings.defaultStream).Result)
 				db.markSent(i.id);
 		}
 	}
@@ -153,14 +153,14 @@ public class UploadService : ILifeSharpService
 		return p;
 	}
 
-	async Task<bool> uploadImage(Image image, string thumbPath, string authToken)
+	async Task<bool> uploadImage(Image image, string thumbPath, string authToken, int streamId)
 	{
 		Log.Info(LogTag, "Uploading image {0}", thumbPath);
 		try
 		{
 			JsonValue response = await Network.HttpPostFileToJsonAsync(Settings.BaseUrl + "api/image/post", authToken, new Dictionary<string, string>()
 				{
-					{ "streamid", "1" }
+					{ "streamid", streamId.ToString() }
 				},
 				"image", thumbPath);
 

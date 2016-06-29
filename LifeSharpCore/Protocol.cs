@@ -72,6 +72,49 @@ public class StreamContents
 }
 
 /// <summary>
+/// The return from a StreamList REST call to the LifeStream server.
+/// </summary>
+public class StreamList
+{
+	public StreamList(JsonValue source)
+	{
+		if ((bool)source["success"])
+		{
+			var streamSrc = source["streams"];
+			this.streams = new Stream[streamSrc.Count];
+			for (int i=0; i<streamSrc.Count; ++i)
+			{
+				this.streams[i] = new Stream()
+				{
+					id = (int)streamSrc[i]["id"],
+					name = (string)streamSrc[i]["name"],
+					permission = (int)streamSrc[i]["permission"],
+					userLogin = (string)streamSrc[i]["userLogin"],
+					userName = (string)streamSrc[i]["userName"]
+				};
+			}
+		}
+		else
+		{
+			this.error = (string)source["error"];
+		}
+	}
+
+	public string error;
+
+	public Stream[] streams;
+
+	public class Stream
+	{
+		public int id;
+		public string name;
+		public int permission;
+		public string userLogin;
+		public string userName;
+	}
+}
+
+/// <summary>
 /// Available types of push services that we might register for. Note that these are
 /// Google, Apple, and Microsoft, not Android, iOS, and Windows, because it's actually
 /// possible to e.g. use GCM on iOS.

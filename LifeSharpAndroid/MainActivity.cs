@@ -7,6 +7,7 @@
  */
 
 using System;
+using System.Linq;
 
 using Android.App;
 using Android.Content;
@@ -72,6 +73,18 @@ public class MainActivity : Activity
 				settings.authToken = result;
 				settings.enabled = true;
 				enabled.Checked = true;
+
+				Protocol.StreamList streams = await Network.GetStreamList(result);
+				if (streams.error.IsNullOrEmpty())
+				{
+					var defaultStreamSpinner = FindViewById<Spinner>(Resource.Id.defaultStream);
+					var adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleSpinnerItem,
+						streams.streams.Select(x => x.name).ToArray());
+					defaultStreamSpinner.Adapter = adapter;
+
+					settings.defaultStream = streams.streams[0].id;
+				}
+
 				settings.commit();
 
 				LifeSharpService.Start(this);

@@ -30,6 +30,7 @@ public class Settings
 		public const string Vibration = "vibration";
 		public const string Sounds = "sounds";
 		public const string GcmId = "gcmid";
+		public const string DefaultStream = "defaultStream";
 	}
 
 	// Default time, in seconds, to set the "last timestamp" if none exists. This will
@@ -227,6 +228,20 @@ public class Settings
 		{
 			edit();
 			setString(Prefs.GcmId, value);
+		}
+	}
+
+	public long defaultStream
+	{
+		get
+		{
+			return getLong(Prefs.DefaultStream, 0);
+		}
+
+		set
+		{
+			edit();
+			setLong(Prefs.DefaultStream, value);
 		}
 	}
 }
