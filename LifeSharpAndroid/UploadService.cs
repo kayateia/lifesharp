@@ -158,7 +158,7 @@ public class UploadService : ILifeSharpService
 		Log.Info(LogTag, "Uploading image {0}", thumbPath);
 		try
 		{
-			JsonValue response = await Network.HttpPostFileToJsonAsync(Settings.BaseUrl + "api/image/post", authToken, new Dictionary<string, string>()
+			JsonValue response = await Network.HttpPostFileToJsonAsync(Settings.BaseUrl + "api/image", authToken, new Dictionary<string, string>()
 				{
 					{ "streamid", streamId.ToString() }
 				},

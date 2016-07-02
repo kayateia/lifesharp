@@ -170,7 +170,7 @@ public class DownloadService : ILifeSharpService
 				{
 					Log.Info(LogTag, String.Format("Download image {0}/{1} to {2}", img.id, img.filename, imgpath));
 
-					await Network.HttpDownloadAsync(Settings.BaseUrl + "api/image/get/" + img.id, settings.authToken, imgpath);
+					await Network.HttpDownloadAsync(Settings.BaseUrl + "api/image/" + img.id, settings.authToken, imgpath);
 				}
 
 				db.addDownloadedFile(imgpath, img.filename, img.userLogin, img.uploadTime, img.comment);
