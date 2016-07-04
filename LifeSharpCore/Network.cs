@@ -16,6 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using ModernHttpClient;
 
 namespace LifeSharp
 {
@@ -37,7 +38,7 @@ static public class Network
 	{
 		Log.Info(LogTag, "Performing HttpDownloadAsync, URL {0}", url);
 
-		using (HttpClient client = new HttpClient())
+		using (HttpClient client = new HttpClient(new NativeMessageHandler()))
 		{
 			var request = new HttpRequestMessage()
 			{
@@ -71,7 +72,7 @@ static public class Network
 		Log.Info(LogTag, "Performing HttpPostToJsonAsync, URL {0}", url);
 
 		using (HttpContent content = new FormUrlEncodedContent(param.ToArray()))
-		using (HttpClient client = new HttpClient())
+		using (HttpClient client = new HttpClient(new NativeMessageHandler()))
 		{
 			var request = new HttpRequestMessage()
 			{
@@ -106,7 +107,7 @@ static public class Network
 	static public async Task<JsonValue> HttpPostFileToJsonAsync(string url, string token, IDictionary<string, string> param, string fileparam, string filename)
 	{
 		Log.Info(LogTag, "Performing HttpPostFileToJsonAsync, URL {0}", url);
-		using (HttpClient client = new HttpClient())
+		using (HttpClient client = new HttpClient(new NativeMessageHandler()))
 		using (FileStream file = File.OpenRead(filename))
 		using (var content = new MultipartFormDataContent("----Upload" + Utils.UnixNow()))
 		{
@@ -149,7 +150,7 @@ static public class Network
 	{
 		Log.Info(LogTag, "Performing HttpGetToJsonAsync, URL {0}", url);
 
-		using (HttpClient client = new HttpClient())
+		using (HttpClient client = new HttpClient(new NativeMessageHandler()))
 		{
 			var request = new HttpRequestMessage()
 			{
@@ -265,6 +266,27 @@ static public class Network
 		}
 
 		return streams;
+	}
+
+	/// <summary>
+	/// Gets a list of all available streams from the LifeStream server.
+	/// </summary>
+	/// <returns>A StreamList object containing an error or the list of streams.</returns>
+	static public async Task<Protocol.SubscriptionInfo> GetSubscriptionInfo(string authToken, int userId)
+	{
+		string url = "api/subscription/user/" + userId;
+		JsonValue results = await HttpGetToJsonAsync(Settings.BaseUrl + url, authToken);
+		var subs = new Protocol.SubscriptionInfo(results);
+		if (subs.succeeded())
+		{
+			Log.Info(LogTag, "Successfully queried for {0} of {1}'s subscriptions", subs.subscriptions.Length, userId);
+		}
+		else
+		{
+			Log.Error(LogTag, "Could not query for {0}'s streams: {1}", userId, subs.error);
+		}
+
+		return subs;
 	}
 }
 
