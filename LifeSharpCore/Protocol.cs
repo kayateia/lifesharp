@@ -14,6 +14,12 @@ namespace LifeSharp.Protocol
 
 public class Basic
 {
+	public Basic(JsonValue source)
+	{
+		if (!Succeeded(source))
+			this.error = GetError(source);
+	}
+
 	static public bool Succeeded(JsonValue source)
 	{
 		return (bool)source["success"] == true;
@@ -23,16 +29,27 @@ public class Basic
 	{
 		return (string)source["error"];
 	}
+
+	public bool succeeded()
+	{
+		return this.error.IsNullOrEmpty();
+	}
+
+	/// <summary>
+	/// The error message, if any; if no error was detected, this is null.
+	/// </summary>
+	public string error;
 }
 
 /// <summary>
 /// Represents the return from a Stream Contents REST call to the LifeStream server
 /// </summary>
-public class StreamContents
+public class StreamContents : Basic
 {
 	public StreamContents(JsonValue source)
+		: base(source)
 	{
-		if ((bool)source["success"])
+		if (succeeded())
 		{
 			var imgsrc = source["images"];
 			this.images = new Image[imgsrc.Count];
@@ -48,16 +65,7 @@ public class StreamContents
 				};
 			}
 		}
-		else
-		{
-			this.error = (string)source["error"];
-		}
 	}
-
-	/// <summary>
-	/// The error message, if any; if no error was detected, this is null.
-	/// </summary>
-	public string error;
 
 	public Image[] images;
 
@@ -74,11 +82,12 @@ public class StreamContents
 /// <summary>
 /// The return from a StreamList REST call to the LifeStream server.
 /// </summary>
-public class StreamList
+public class StreamList : Basic
 {
 	public StreamList(JsonValue source)
+		: base(source)
 	{
-		if ((bool)source["success"])
+		if (succeeded())
 		{
 			var streamSrc = source["streams"];
 			this.streams = new Stream[streamSrc.Count];
@@ -94,13 +103,7 @@ public class StreamList
 				};
 			}
 		}
-		else
-		{
-			this.error = (string)source["error"];
-		}
 	}
-
-	public string error;
 
 	public Stream[] streams;
 
@@ -112,6 +115,31 @@ public class StreamList
 		public string userLogin;
 		public string userName;
 	}
+}
+
+/// <summary>
+/// The return from a "get user info by username" REST call to the LifeStream server.
+/// </summary>
+public class LoginInfo : Basic
+{
+	public LoginInfo(JsonValue source)
+		: base(source)
+	{
+		if (succeeded())
+		{
+			id = (int)source["id"];
+			login = (string)source["login"];
+			name = (string)source["name"];
+			email = (string)source["email"];
+			isadmin = (bool)source["isAdmin"];
+		}
+	}
+
+	public int id;
+	public string login;
+	public string name;
+	public string email;
+	public bool isadmin;
 }
 
 /// <summary>

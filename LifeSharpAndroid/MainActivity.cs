@@ -59,6 +59,18 @@ public class MainActivity : Activity
 			settings.uploadNotifications = uploadNotifications.Checked;
 			settings.commit();
 		};*/
+
+		var defaultStreamSpinner = FindViewById<Spinner>(Resource.Id.defaultStream);
+		int[] streamIds = null;
+		defaultStreamSpinner.ItemSelected += delegate {
+			if (streamIds == null)
+				return;
+
+			settings.defaultStream = streamIds[defaultStreamSpinner.SelectedItemPosition];
+			settings.commit();
+			Log.Info("LifeSharp", "Setting new default stream to {0}", settings.defaultStream);
+		};
+
 		Button button = FindViewById<Button>(Resource.Id.buttonLogin);
 		button.Click += async delegate {
 			settings.userName = login.Text;
@@ -74,15 +86,22 @@ public class MainActivity : Activity
 				settings.enabled = true;
 				enabled.Checked = true;
 
-				Protocol.StreamList streams = await Network.GetStreamList(result);
+				// Get our user ID.
+				Protocol.LoginInfo loginInfo = await Network.GetLoginInfo(result, settings.userName);
+				int? loginId = null;
+				if (loginInfo.succeeded())
+					loginId = loginInfo.id;
+
+				Protocol.StreamList streams = await Network.GetStreamList(result, loginId);
 				if (streams.error.IsNullOrEmpty())
 				{
-					var defaultStreamSpinner = FindViewById<Spinner>(Resource.Id.defaultStream);
+					streamIds = streams.streams.Select(x => x.id).ToArray();
 					var adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleSpinnerItem,
 						streams.streams.Select(x => x.name).ToArray());
 					defaultStreamSpinner.Adapter = adapter;
 
-					settings.defaultStream = streams.streams[0].id;
+					if (streams.streams.Length > 0)
+						settings.defaultStream = streams.streams[0].id;
 				}
 
 				settings.commit();

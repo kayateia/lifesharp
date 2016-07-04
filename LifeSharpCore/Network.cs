@@ -227,15 +227,35 @@ static public class Network
 		}
 	}
 
+	static public async Task<Protocol.LoginInfo> GetLoginInfo(string authToken, string userLogin)
+	{
+		JsonValue results = await HttpGetToJsonAsync(Settings.BaseUrl + "api/user/login/" + userLogin, authToken);
+		var info = new Protocol.LoginInfo(results);
+
+		if (info.succeeded())
+		{
+			Log.Info(LogTag, "Successfully queried for info about user {0}", userLogin);
+		}
+		else
+		{
+			Log.Error(LogTag, "Could not query for info about user {0}: {1}", userLogin, info.error);
+		}
+
+		return info;
+	}
+
 	/// <summary>
 	/// Gets a list of all available streams from the LifeStream server.
 	/// </summary>
 	/// <returns>A StreamList object containing an error or the list of streams.</returns>
-	static public async Task<Protocol.StreamList> GetStreamList(string authToken)
+	static public async Task<Protocol.StreamList> GetStreamList(string authToken, int? userOnly)
 	{
-		JsonValue results = await HttpGetToJsonAsync(Settings.BaseUrl + "api/stream/list", authToken);
+		string url = "api/stream/list";
+		if (userOnly.HasValue)
+			url += "?userid=" + userOnly.Value;
+		JsonValue results = await HttpGetToJsonAsync(Settings.BaseUrl + url, authToken);
 		var streams = new Protocol.StreamList(results);
-		if (streams.error.IsNullOrEmpty())
+		if (streams.succeeded())
 		{
 			Log.Info(LogTag, "Successfully queried for {0} streams", streams.streams.Length);
 		}
