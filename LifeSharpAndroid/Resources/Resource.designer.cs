@@ -26,6 +26,7 @@ namespace LifeSharp
 		
 		public static void UpdateIdValues()
 		{
+			global::ModernHttpClient.Resource.String.library_name = global::LifeSharp.Resource.String.library_name;
 		}
 		
 		public partial class Attribute
@@ -440,8 +441,8 @@ namespace LifeSharp
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f070020
-			public const int app_name = 2131165216;
+			// aapt resource value: 0x7f070021
+			public const int app_name = 2131165217;
 			
 			// aapt resource value: 0x7f07001d
 			public const int auth_google_play_services_client_facebook_display_name = 2131165213;
@@ -536,8 +537,11 @@ namespace LifeSharp
 			// aapt resource value: 0x7f07001b
 			public const int common_signin_button_text_long = 2131165211;
 			
+			// aapt resource value: 0x7f070020
+			public const int hello = 2131165216;
+			
 			// aapt resource value: 0x7f07001f
-			public const int hello = 2131165215;
+			public const int library_name = 2131165215;
 			
 			static String()
 			{

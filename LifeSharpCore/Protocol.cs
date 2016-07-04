@@ -142,6 +142,41 @@ public class LoginInfo : Basic
 	public bool isadmin;
 }
 
+public class SubscriptionInfo : Basic
+{
+	public SubscriptionInfo(JsonValue source)
+		: base(source)
+	{
+		if (succeeded())
+		{
+			var subSrc = source["subscriptions"];
+			this.subscriptions = new Subscription[subSrc.Count];
+			for (int i=0; i<subSrc.Count; ++i)
+			{
+				this.subscriptions[i] = new Subscription()
+				{
+					id = (int)subSrc[i]["streamid"],
+					name = (string)subSrc[i]["streamName"],
+					userId = (int)subSrc[i]["userid"],
+					userLogin = (string)subSrc[i]["userLogin"],
+					userName = (string)subSrc[i]["userName"]
+				};
+			}
+		}
+	}
+
+	public Subscription[] subscriptions;
+
+	public class Subscription
+	{
+		public int id;
+		public string name;
+		public int userId;
+		public string userLogin;
+		public string userName;
+	}
+}
+
 /// <summary>
 /// Available types of push services that we might register for. Note that these are
 /// Google, Apple, and Microsoft, not Android, iOS, and Windows, because it's actually

@@ -22,6 +22,7 @@ public class Settings
 	{
 		public const string Name = "LifeSharpPrefs";
 		public const string User = "username";
+		public const string UserId = "userid";
 		public const string Pass = "password";
 		public const string Auth = "authToken";
 		public const string LastCheck = "lastCheck";
@@ -120,6 +121,18 @@ public class Settings
 		set
 		{
 			setString(Prefs.Name, value);
+		}
+	}
+
+	public long userId
+	{
+		get
+		{
+			return getLong(Prefs.UserId, 0);
+		}
+		set
+		{
+			setLong(Prefs.UserId, value);
 		}
 	}
 

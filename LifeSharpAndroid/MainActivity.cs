@@ -89,8 +89,10 @@ public class MainActivity : Activity
 				// Get our user ID.
 				Protocol.LoginInfo loginInfo = await Network.GetLoginInfo(result, settings.userName);
 				int? loginId = null;
-				if (loginInfo.succeeded())
+				if (loginInfo.succeeded()) {
+					settings.userId = loginInfo.id;
 					loginId = loginInfo.id;
+				}
 
 				Protocol.StreamList streams = await Network.GetStreamList(result, loginId);
 				if (streams.error.IsNullOrEmpty())
