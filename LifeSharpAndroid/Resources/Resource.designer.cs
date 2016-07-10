@@ -333,29 +333,50 @@ namespace LifeSharp
 			// aapt resource value: 0x7f050004
 			public const int auto = 2131034116;
 			
-			// aapt resource value: 0x7f050014
-			public const int buttonGallery = 2131034132;
+			// aapt resource value: 0x7f050011
+			public const int btnDownloadSound = 2131034129;
 			
 			// aapt resource value: 0x7f050013
-			public const int buttonLogin = 2131034131;
+			public const int btnOkay = 2131034131;
 			
 			// aapt resource value: 0x7f05000d
-			public const int checkEnable = 2131034125;
+			public const int btnUploadSound = 2131034125;
 			
-			// aapt resource value: 0x7f05000e
-			public const int checkUploadNotifications = 2131034126;
+			// aapt resource value: 0x7f05001d
+			public const int buttonGallery = 2131034141;
+			
+			// aapt resource value: 0x7f05001c
+			public const int buttonLogin = 2131034140;
+			
+			// aapt resource value: 0x7f05001f
+			public const int buttonNotifications = 2131034143;
+			
+			// aapt resource value: 0x7f050010
+			public const int cbDVibration = 2131034128;
+			
+			// aapt resource value: 0x7f05000f
+			public const int cbDownloadNotifications = 2131034127;
+			
+			// aapt resource value: 0x7f05000c
+			public const int cbUVibration = 2131034124;
+			
+			// aapt resource value: 0x7f05000b
+			public const int cbUploadNotifications = 2131034123;
+			
+			// aapt resource value: 0x7f050017
+			public const int checkEnable = 2131034135;
 			
 			// aapt resource value: 0x7f050005
 			public const int dark = 2131034117;
 			
-			// aapt resource value: 0x7f050016
-			public const int defaultStream = 2131034134;
+			// aapt resource value: 0x7f05001e
+			public const int defaultStream = 2131034142;
 			
-			// aapt resource value: 0x7f050010
-			public const int editLogin = 2131034128;
+			// aapt resource value: 0x7f050019
+			public const int editLogin = 2131034137;
 			
-			// aapt resource value: 0x7f050012
-			public const int editPassword = 2131034130;
+			// aapt resource value: 0x7f05001b
+			public const int editPassword = 2131034139;
 			
 			// aapt resource value: 0x7f050001
 			public const int icon_only = 2131034113;
@@ -363,32 +384,38 @@ namespace LifeSharp
 			// aapt resource value: 0x7f050000
 			public const int item_touch_helper_previous_elevation = 2131034112;
 			
-			// aapt resource value: 0x7f05000f
-			public const int labelForLogin = 2131034127;
+			// aapt resource value: 0x7f050018
+			public const int labelForLogin = 2131034136;
 			
-			// aapt resource value: 0x7f050011
-			public const int labelPassword = 2131034129;
+			// aapt resource value: 0x7f05001a
+			public const int labelPassword = 2131034138;
 			
 			// aapt resource value: 0x7f050006
 			public const int light = 2131034118;
 			
-			// aapt resource value: 0x7f05000a
-			public const int linearLayout1 = 2131034122;
+			// aapt resource value: 0x7f050014
+			public const int linearLayout1 = 2131034132;
 			
-			// aapt resource value: 0x7f05000c
-			public const int loginStatus = 2131034124;
+			// aapt resource value: 0x7f050016
+			public const int loginStatus = 2131034134;
 			
 			// aapt resource value: 0x7f050009
 			public const int none = 2131034121;
 			
-			// aapt resource value: 0x7f05000b
-			public const int recyclerView = 2131034123;
+			// aapt resource value: 0x7f050015
+			public const int recyclerView = 2131034133;
 			
 			// aapt resource value: 0x7f050002
 			public const int standard = 2131034114;
 			
-			// aapt resource value: 0x7f050015
-			public const int textView1 = 2131034133;
+			// aapt resource value: 0x7f05000a
+			public const int textView1 = 2131034122;
+			
+			// aapt resource value: 0x7f05000e
+			public const int textView2 = 2131034126;
+			
+			// aapt resource value: 0x7f050012
+			public const int textView3 = 2131034130;
 			
 			// aapt resource value: 0x7f050003
 			public const int wide = 2131034115;
@@ -423,10 +450,13 @@ namespace LifeSharp
 		{
 			
 			// aapt resource value: 0x7f030000
-			public const int Gallery = 2130903040;
+			public const int ConfigureNotifications = 2130903040;
 			
 			// aapt resource value: 0x7f030001
-			public const int Main = 2130903041;
+			public const int Gallery = 2130903041;
+			
+			// aapt resource value: 0x7f030002
+			public const int Main = 2130903042;
 			
 			static Layout()
 			{

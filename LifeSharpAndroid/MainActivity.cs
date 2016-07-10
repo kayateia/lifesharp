@@ -36,13 +36,12 @@ public class MainActivity : Activity
 		Settings settings = new Settings(this.ApplicationContext);
 		var statusLabel = FindViewById<TextView>(Resource.Id.loginStatus);
 		var enabled = FindViewById<CheckBox>(Resource.Id.checkEnable);
-		// var uploadNotifications = FindViewById<CheckBox>(Resource.Id.checkUploadNotifications);
+		var buttonNotifications = FindViewById<Button>(Resource.Id.buttonNotifications);
 		var login = FindViewById<TextView>(Resource.Id.editLogin);
 		var password = FindViewById<TextView>(Resource.Id.editPassword);
 
 		// Load up defaults from Settings.
 		enabled.Checked = settings.enabled;
-		// uploadNotifications.Checked = 
 		login.Text = settings.userName;
 		password.Text = settings.password;
 
@@ -61,10 +60,11 @@ public class MainActivity : Activity
 			if (!oldSetting)
 				LifeSharpService.Start(this);
 		};
-		/*uploadNotifications.CheckedChange += delegate {
-			settings.uploadNotifications = uploadNotifications.Checked;
-			settings.commit();
-		};*/
+
+		buttonNotifications.Click += delegate {
+			Intent intent = new Intent(this, typeof(ConfigureNotificationsActivity));
+			StartActivity(intent);
+		};
 
 		var defaultStreamSpinner = FindViewById<Spinner>(Resource.Id.defaultStream);
 		await fillStreams(settings);

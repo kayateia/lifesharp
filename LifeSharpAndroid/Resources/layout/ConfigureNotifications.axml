@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:text="Notifications"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="match_parent"
+        android:layout_height="35.0dp"
+        android:id="@+id/textView1" />
+    <CheckBox
+        android:text="Upload Notifications"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/cbUploadNotifications" />
+    <CheckBox
+        android:text="     Vibration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/cbUVibration" />
+    <Button
+        android:text="Choose Upload Sound..."
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnUploadSound" />
+    <TextView
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="match_parent"
+        android:layout_height="48.5dp"
+        android:id="@+id/textView2" />
+    <CheckBox
+        android:text="Download Notifications"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/cbDownloadNotifications" />
+    <CheckBox
+        android:text="     Vibration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/cbDVibration" />
+    <Button
+        android:text="Choose Download Sound..."
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnDownloadSound" />
+    <TextView
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="match_parent"
+        android:layout_height="113.5dp"
+        android:id="@+id/textView3" />
+    <Button
+        android:text="Done"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnOkay" />
+</LinearLayout>

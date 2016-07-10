@@ -31,6 +31,7 @@ public class Settings
 		public const string Vibration = "vibration";
 		public const string Sounds = "sounds";
 		public const string GcmId = "gcmid";
+		public const string UploadNotifications = "uploadNotifications";
 		public const string DefaultStream = "defaultStream";
 	}
 
@@ -257,6 +258,21 @@ public class Settings
 			setLong(Prefs.DefaultStream, value);
 		}
 	}
+
+	public bool uploadNotifications
+	{
+		get
+		{
+			return getBool(Prefs.UploadNotifications, true);
+		}
+
+		set
+		{
+			edit();
+			setBool(Prefs.UploadNotifications, value);
+		}
+	}
+
 }
 
 }
