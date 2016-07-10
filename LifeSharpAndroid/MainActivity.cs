@@ -1,6 +1,6 @@
 ﻿/*
 	LifeStream - Instant Photo Sharing
-	Copyright (C) 2014-2016 Kayateia
+	Copyright (C) 2014-2016 Kayateia and Dove
 
 	This code is licensed under the GPL v3 or later.
 	Please see the file LICENSE for more info.
@@ -16,6 +16,7 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using Android.Util;
+using System.Threading.Tasks;
 
 namespace LifeSharp
 {
@@ -23,7 +24,7 @@ namespace LifeSharp
 [Activity(Label = "LifeSharp", MainLauncher = true, Icon = "@drawable/icon")]
 public class MainActivity : Activity
 {
-	protected override void OnCreate(Bundle bundle)
+	protected override async void OnCreate(Bundle bundle)
 	{
 		base.OnCreate(bundle);
 
@@ -45,6 +46,11 @@ public class MainActivity : Activity
 		login.Text = settings.userName;
 		password.Text = settings.password;
 
+		if (settings.authToken.IsNullOrEmpty())
+			statusLabel.Text = "Not logged in";
+		else
+			statusLabel.Text = "Logged in as " + settings.userName;
+
 		// Wire up UI events.
 		enabled.CheckedChange += delegate {
 			bool oldSetting = settings.enabled;
@@ -61,12 +67,12 @@ public class MainActivity : Activity
 		};*/
 
 		var defaultStreamSpinner = FindViewById<Spinner>(Resource.Id.defaultStream);
-		int[] streamIds = null;
+		await fillStreams(settings);
 		defaultStreamSpinner.ItemSelected += delegate {
-			if (streamIds == null)
+			if (_streamIds == null)
 				return;
 
-			settings.defaultStream = streamIds[defaultStreamSpinner.SelectedItemPosition];
+			settings.defaultStream = _streamIds[defaultStreamSpinner.SelectedItemPosition];
 			settings.commit();
 			Log.Info("LifeSharp", "Setting new default stream to {0}", settings.defaultStream);
 		};
@@ -81,33 +87,21 @@ public class MainActivity : Activity
 			try
 			{
 				string result = await Network.Login(settings);
-				statusLabel.Text = result;
+				statusLabel.Text = "Logged in successfully";
 				settings.authToken = result;
 				settings.enabled = true;
 				enabled.Checked = true;
 
 				// Get our user ID.
 				Protocol.LoginInfo loginInfo = await Network.GetLoginInfo(result, settings.userName);
-				int? loginId = null;
-				if (loginInfo.succeeded()) {
+				if (loginInfo.succeeded())
 					settings.userId = loginInfo.id;
-					loginId = loginInfo.id;
-				}
 
-				Protocol.StreamList streams = await Network.GetStreamList(result, loginId);
-				if (streams.error.IsNullOrEmpty())
-				{
-					streamIds = streams.streams.Select(x => x.id).ToArray();
-					var adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleSpinnerItem,
-						streams.streams.Select(x => x.name).ToArray());
-					defaultStreamSpinner.Adapter = adapter;
-
-					if (streams.streams.Length > 0)
-						settings.defaultStream = streams.streams[0].id;
-				}
+				await fillStreams(settings);
 
 				settings.commit();
 
+				// This won't have already happened if we didn't have login info.
 				LifeSharpService.Start(this);
 			}
 			catch (Exception ex)
@@ -121,20 +115,52 @@ public class MainActivity : Activity
 			StartActivity(typeof(GalleryActivity));
 		};
 
-		if (Config.GcmNotificationKey != null)
-		{
-			if (!GCMRegistrationService.IsAvailable(this))
-			{
-				settings.enabled = false;
-				enabled.Checked = false;
-				return;
-			}
-			GCMRegistrationService.Start(this);
-		}
-
-		if (settings.enabled)
-			LifeSharpService.Start(this);
+		ReceiveBoot.CompleteStartup(this, settings);
 	}
+
+	async Task fillStreams(Settings settings)
+	{
+		if (settings.userId == 0)
+			return;
+
+		Protocol.StreamList streams = await Network.GetStreamList(settings.authToken, (int)settings.userId);
+		if (streams.succeeded())
+		{
+			// Fill the spinner itself.
+			_streamIds = streams.streams.Select(x => x.id).ToArray();
+			var adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleSpinnerItem,
+				streams.streams.Select(x => x.name).ToArray());
+			var defaultStreamSpinner = FindViewById<Spinner>(Resource.Id.defaultStream);
+			defaultStreamSpinner.Adapter = adapter;
+
+			// If we already have a default stream, select it in the list.
+			if (settings.defaultStream > 0)
+			{
+				// Figure out which index it was.
+				int index = -1;
+				for (int i=0; i<_streamIds.Length; ++i)
+					if (_streamIds[i] == settings.defaultStream)
+					{
+						index = i;
+						break;
+					}
+
+				if (index >= 0)
+					defaultStreamSpinner.SetSelection(index);
+			}
+			else
+			{
+				// There was no default stream - set the first available one if we have one.
+				if (streams.streams.Length > 0)
+				{
+					settings.defaultStream = streams.streams[0].id;
+					settings.commit();
+				}
+			}
+		}
+	}
+
+	int[] _streamIds;
 }
 
 }
