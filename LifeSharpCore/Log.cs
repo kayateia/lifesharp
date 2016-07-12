@@ -27,32 +27,38 @@ static public class Log
 
 	static public void Info(string tag, string text)
 	{
-		_logger.info(tag, text);
+		if (_logger != null)
+			_logger.info(tag, text);
 	}
 
 	static public void Info(string tag, string fmt, params object[] p)
 	{
-		_logger.info(tag, String.Format(fmt, p));
+		if (_logger != null)
+			_logger.info(tag, String.Format(fmt, p));
 	}
 
 	static public void Warn(string tag, string text)
 	{
-		_logger.warn(tag, text);
+		if (_logger != null)
+			_logger.warn(tag, text);
 	}
 
 	static public void Warn(string tag, string fmt, params object[] p)
 	{
-		_logger.warn(tag, String.Format(fmt, p));
+		if (_logger != null)
+			_logger.warn(tag, String.Format(fmt, p));
 	}
 
 	static public void Error(string tag, string text)
 	{
-		_logger.error(tag, text);
+		if (_logger != null)
+			_logger.error(tag, text);
 	}
 
 	static public void Error(string tag, string fmt, params object[] p)
 	{
-		_logger.error(tag, String.Format(fmt, p));
+		if (_logger != null)
+			_logger.error(tag, String.Format(fmt, p));
 	}
 
 	static ILog _logger;

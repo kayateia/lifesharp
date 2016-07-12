@@ -21,6 +21,9 @@ public class ReceiveBoot : BroadcastReceiver
 	{
 		if (intent.Action == Android.Content.Intent.ActionBootCompleted)
 		{
+			// This may happen before our MainActivity is loaded, so we have to do it also.
+			Log.SetLogger(new LogAndroid());
+
 			Settings settings = new Settings(context);
 			CompleteStartup(context, settings);
 		}
