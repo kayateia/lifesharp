@@ -13,7 +13,8 @@
         android:text="Enable LifeSharp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/checkEnable" />
+        android:id="@+id/checkEnable"
+        android:layout_marginBottom="12.5dp" />
     <TextView
         android:text="Login Name:"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -50,11 +51,13 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView1" />
+        android:id="@+id/textView1"
+        android:layout_marginTop="21.0dp" />
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/defaultStream" />
+        android:id="@+id/defaultStream"
+        android:layout_marginBottom="20.5dp" />
     <Button
         android:text="Configure Notifications..."
         android:layout_width="match_parent"
