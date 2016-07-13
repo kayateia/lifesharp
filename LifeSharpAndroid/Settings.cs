@@ -21,6 +21,7 @@ public class Settings
 	class Prefs
 	{
 		public const string Name = "LifeSharpPrefs";
+		public const string AfterFirstRun = "afterFirstRun";
 		public const string User = "username";
 		public const string UserId = "userid";
 		public const string Pass = "password";
@@ -114,6 +115,19 @@ public class Settings
 	{
 		edit();
 		_editor.PutLong(id, val);
+	}
+
+	public bool afterFirstRun
+	{
+		get
+		{
+			return getBool(Prefs.AfterFirstRun, false);
+		}
+
+		set
+		{
+			setBool(Prefs.AfterFirstRun, value);
+		}
 	}
 
 	public string userName

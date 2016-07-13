@@ -11,6 +11,7 @@ using System.Linq;
 
 using Android.App;
 using Android.Content;
+using Android.Media;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
@@ -39,6 +40,21 @@ public class MainActivity : Activity
 		var buttonNotifications = FindViewById<Button>(Resource.Id.buttonNotifications);
 		var login = FindViewById<TextView>(Resource.Id.editLogin);
 		var password = FindViewById<TextView>(Resource.Id.editPassword);
+
+		// First run initialisation.
+		if (!settings.afterFirstRun) {
+			// If notification sound is null, set it to the system-default sound
+			if (settings.downloadSound == null) {
+				settings.downloadSound = RingtoneManager.GetDefaultUri(RingtoneType.Notification).ToString();
+			}
+			if (settings.uploadSound == null) {
+				settings.uploadSound = RingtoneManager.GetDefaultUri(RingtoneType.Notification).ToString();
+			}
+
+			// Indicate that first run init is complete.
+			settings.afterFirstRun = true;
+			settings.commit();
+		}
 
 		// Load up defaults from Settings.
 		enabled.Checked = settings.enabled;
