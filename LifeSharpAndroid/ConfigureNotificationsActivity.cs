@@ -97,13 +97,11 @@ public class ConfigureNotificationsActivity : Activity
 					pickedUri = (Uri)data.GetParcelableExtra(RingtoneManager.ExtraRingtonePickedUri);
 					_settings.downloadSound = pickedUri != null ? pickedUri.ToString() : null;
 					_settings.commit();
-					Console.WriteLine("Set downloadSound = " + _settings.downloadSound);
 					break;
 				case RequestCode.UploadSound:
 					pickedUri = (Uri)data.GetParcelableExtra(RingtoneManager.ExtraRingtonePickedUri);
 					_settings.uploadSound = pickedUri != null ? pickedUri.ToString() : null;
 					_settings.commit();
-					Console.WriteLine("Set uploadSound = " + _settings.uploadSound);
 					break;
 				default:
 					// Don't know how to handle other kinds of requests
@@ -136,7 +134,6 @@ public class ConfigureNotificationsActivity : Activity
 		intent.PutExtra(RingtoneManager.ExtraRingtoneShowDefault, true);
 		intent.PutExtra(RingtoneManager.ExtraRingtoneType, (int)RingtoneType.Notification);
 		intent.PutExtra(RingtoneManager.ExtraRingtoneDefaultUri, RingtoneManager.GetDefaultUri(RingtoneType.Notification));
-		Console.WriteLine("ExtraRingtoneExistingUri: " + uri);
 		intent.PutExtra(RingtoneManager.ExtraRingtoneExistingUri, uri);
 		StartActivityForResult(intent, requestCode);
 	}

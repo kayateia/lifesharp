@@ -75,16 +75,11 @@ static public class Notifications
 		PendingIntent contentIntent = PendingIntent.GetActivity(context, id, notificationIntent, flags);
 
 		NotificationDefaults defaults = 0;
-		if (vibration && soundUri != null && showLed)
-			defaults = NotificationDefaults.All;
-		else
-		{
-			defaults = (soundUri != null) ? NotificationDefaults.Sound : 0;
-			defaults |= (vibration) ? NotificationDefaults.Vibrate : 0;
-			defaults |= (showLed) ? NotificationDefaults.Lights : 0;
-		}
+		// If vibration was requested, use the system-default vibration pattern
+		defaults = (vibration) ? NotificationDefaults.Vibrate : 0;
+		// If notification light was requested, use system-default colour and blink pattern
+		defaults |= (showLed) ? NotificationDefaults.Lights : 0;
 
-		Console.WriteLine("Setting notification sound: " + soundUri);
 		Notification.Builder notificationBuilder = new Notification.Builder(context)
 			.SetDefaults(defaults)
 			.SetSound(soundUri)
@@ -95,6 +90,11 @@ static public class Notifications
 			.SetSmallIcon(icon, 0)
 			.SetAutoCancel(true);
 
+		// No notification light if not requested
+		if (!showLed)
+			notificationBuilder.SetLights(0, 0, 0);
+
+		// No vibration pattern if not requested
 		if (!vibration)
 			notificationBuilder.SetVibrate(new long[] { 0, 0 });
 
@@ -115,7 +115,6 @@ static public class Notifications
 
 		if (notification == null)
 			notification = notificationBuilder.Build();
-		Console.WriteLine("Using notification sound: " + notification.Sound);
 
 		NotificationManager notificationManager = (NotificationManager)context.GetSystemService(Context.NotificationService);
 		notificationManager.Notify(id, notification);
