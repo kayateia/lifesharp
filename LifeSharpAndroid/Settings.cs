@@ -28,11 +28,14 @@ public class Settings
 		public const string LastCheck = "lastCheck";
 		public const string Enabled = "enabled";
 		public const string LastImageTimestamp = "lastImageTimestamp";
-		public const string Vibration = "vibration";
-		public const string Sounds = "sounds";
 		public const string GcmId = "gcmid";
-		public const string UploadNotifications = "uploadNotifications";
 		public const string DefaultStream = "defaultStream";
+		public const string DownloadNotifications = "downloadNotifications";
+		public const string DownloadSound = "downloadSound";
+		public const string DownloadVibration = "downloadVibration";
+		public const string UploadNotifications = "uploadNotifications";
+		public const string UploadSound = "uploadSound";
+		public const string UploadVibration = "uploadVibration";
 	}
 
 	// Default time, in seconds, to set the "last timestamp" if none exists. This will
@@ -198,36 +201,7 @@ public class Settings
 
 		set
 		{
-			edit();
 			setLong(Prefs.LastImageTimestamp, value);
-		}
-	}
-
-	public bool vibration
-	{
-		get
-		{
-			return getBool(Prefs.Vibration, true);
-		}
-
-		set
-		{
-			edit();
-			setBool(Prefs.Vibration, value);
-		}
-	}
-
-	public bool sounds
-	{
-		get
-		{
-			return getBool(Prefs.Sounds, true);
-		}
-
-		set
-		{
-			edit();
-			setBool(Prefs.Sounds, value);
 		}
 	}
 
@@ -240,7 +214,6 @@ public class Settings
 
 		set
 		{
-			edit();
 			setString(Prefs.GcmId, value);
 		}
 	}
@@ -254,8 +227,46 @@ public class Settings
 
 		set
 		{
-			edit();
 			setLong(Prefs.DefaultStream, value);
+		}
+	}
+
+	public bool downloadNotifications
+	{
+		get
+		{
+			return getBool(Prefs.DownloadNotifications, true);
+		}
+
+		set
+		{
+			setBool(Prefs.DownloadNotifications, value);
+		}
+	}
+
+	public string downloadSound
+	{
+		get
+		{
+			return getString(Prefs.DownloadSound, null);
+		}
+
+		set
+		{
+			setString(Prefs.DownloadSound, value);
+		}
+	}
+
+	public bool downloadVibration
+	{
+		get
+		{
+			return getBool(Prefs.DownloadVibration, true);
+		}
+
+		set
+		{
+			setBool(Prefs.DownloadVibration, value);
 		}
 	}
 
@@ -268,8 +279,33 @@ public class Settings
 
 		set
 		{
-			edit();
 			setBool(Prefs.UploadNotifications, value);
+		}
+	}
+
+	public string uploadSound
+	{
+		get
+		{
+			return getString(Prefs.UploadSound, null);
+		}
+
+		set
+		{
+			setString(Prefs.UploadSound, value);
+		}
+	}
+
+	public bool uploadVibration
+	{
+		get
+		{
+			return getBool(Prefs.UploadVibration, true);
+		}
+
+		set
+		{
+			setBool(Prefs.UploadVibration, value);
 		}
 	}
 

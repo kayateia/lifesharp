@@ -8,6 +8,7 @@
 
 using System;
 using Android.Content;
+using Android.Media;
 using Android.Net;
 using Android.App;
 using Android.Util;
@@ -44,25 +45,27 @@ static public class Notifications
 	static public void NotifyError(Context context, int id, bool replace, string tickerText, string title, string text)
 	{
 		Intent intent = GetBaseIntent(context, null);
-		NotifyCommon(context, id, replace, tickerText, title, text, Android.Resource.Drawable.StatNotifyError, intent, true, null);
+		NotifyCommon(context, id, replace, tickerText, title, text, Android.Resource.Drawable.StatNotifyError, intent, true, RingtoneManager.GetDefaultUri(RingtoneType.Notification), false, null);
 	}
 
 	static public void NotifyDownload(Context context, int id, bool replace, string tickerText, string title, string text, Uri imageUri)
 	{
+		Settings settings = new Settings(context);
 		Intent intent = GetBaseIntent(context, "");
 		intent.SetDataAndType(imageUri, "image/*");
-		NotifyCommon(context, id, replace, tickerText, title, text, Resource.Drawable.TransferDown, intent, true, imageUri);
+		NotifyCommon(context, id, replace, tickerText, title, text, Resource.Drawable.TransferDown, intent, true, Uri.Parse(settings.downloadSound), settings.downloadVibration, imageUri);
 	}
 
 	static public void NotifyUpload(Context context, int id, bool replace, string tickerText, string title, string text, string imagePath, string thumbnailPath)
 	{
+		Settings settings = new Settings(context);
 		Intent intent = GetBaseIntent(context, imagePath);
-		NotifyCommon(context, id, replace, tickerText, title, text, Resource.Drawable.TransferDown, intent, false, Uri.Parse("file://" + thumbnailPath));
+		NotifyCommon(context, id, replace, tickerText, title, text, Resource.Drawable.TransferDown, intent, false, Uri.Parse(settings.uploadSound), settings.uploadVibration, Uri.Parse("file://" + thumbnailPath));
 	}
 
 	static public void NotifyCommon(Context context, int id, bool replace,
 		string tickerText, String title, String text, int icon,
-		Intent notificationIntent, bool showLed, Uri contentUri)
+		Intent notificationIntent, bool showLed, Uri soundUri, bool vibration, Uri contentUri)
 	{
 		PendingIntentFlags flags = 0;
 		if (replace)
@@ -70,20 +73,20 @@ static public class Notifications
 		PendingIntent contentIntent = PendingIntent.GetActivity(context, id, notificationIntent, flags);
 
 		Settings settings = new Settings(context);
-		bool vibration = settings.vibration;
-		bool soundsEnabled = settings.sounds;
 		NotificationDefaults defaults = 0;
-		if (vibration && soundsEnabled && showLed)
+		if (vibration && soundUri != null && showLed)
 			defaults = NotificationDefaults.All;
 		else
 		{
-			defaults = (soundsEnabled) ? NotificationDefaults.Sound : 0;
+			defaults = (soundUri != null) ? NotificationDefaults.Sound : 0;
 			defaults |= (vibration) ? NotificationDefaults.Vibrate : 0;
 			defaults |= (showLed) ? NotificationDefaults.Lights : 0;
 		}
 
+		Console.WriteLine("Using notification sound: " + soundUri.ToString());
 		Notification.Builder notificationBuilder = new Notification.Builder(context)
 			.SetDefaults(defaults)
+			.SetSound(soundUri)
 			.SetContentTitle(title)
 			.SetTicker(tickerText)
 			.SetContentText(text)

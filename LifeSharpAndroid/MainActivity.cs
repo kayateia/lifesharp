@@ -33,7 +33,7 @@ public class MainActivity : Activity
 		// Set our view from the "main" layout resource
 		SetContentView(Resource.Layout.Main);
 
-		Settings settings = new Settings(this.ApplicationContext);
+		Settings settings = new Settings(ApplicationContext);
 		var statusLabel = FindViewById<TextView>(Resource.Id.loginStatus);
 		var enabled = FindViewById<CheckBox>(Resource.Id.checkEnable);
 		var buttonNotifications = FindViewById<Button>(Resource.Id.buttonNotifications);

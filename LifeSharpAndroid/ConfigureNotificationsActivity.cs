@@ -19,48 +19,65 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 
+using Uri = Android.Net.Uri;
+
 namespace LifeSharp
 {
 
 [Activity(Label = "ConfigureNotificationsActivity")]
 public class ConfigureNotificationsActivity : Activity
 {
+	Settings _settings;
+
+	class RequestCode {
+		public const int DownloadSound = 1000;
+		public const int UploadSound = 1001;
+	}
+
 	protected override void OnCreate(Bundle savedInstanceState)
 	{
 		base.OnCreate(savedInstanceState);
 
 		SetContentView(Resource.Layout.ConfigureNotifications);
 
-		Settings settings = new Settings(this);
+		_settings = new Settings(ApplicationContext);
 
 		var uploadNotifications = FindViewById<CheckBox>(Resource.Id.cbUploadNotifications);
-		uploadNotifications.Checked = settings.uploadNotifications;
+		uploadNotifications.Checked = _settings.uploadNotifications;
 		uploadNotifications.CheckedChange += delegate {
-			settings.uploadNotifications = uploadNotifications.Checked;
-			settings.commit();
+			_settings.uploadNotifications = uploadNotifications.Checked;
+			_settings.commit();
 		};
 
-		var uploadVibrate = FindViewById<CheckBox>(Resource.Id.cbUVibration);
-		uploadVibrate.CheckedChange += delegate {
+		var downloadNotifications = FindViewById<CheckBox>(Resource.Id.cbDownloadNotifications);
+		downloadNotifications.Checked = _settings.downloadNotifications;
+		downloadNotifications.CheckedChange += delegate {
+			_settings.downloadNotifications = downloadNotifications.Checked;
+			_settings.commit();
+		};
+
+		var uploadVibration = FindViewById<CheckBox>(Resource.Id.cbUVibration);
+		uploadVibration.Checked = _settings.uploadVibration;
+		uploadVibration.CheckedChange += delegate {
+			_settings.uploadVibration = uploadVibration.Checked;
+			_settings.commit();
+		};
+
+		var downloadVibration = FindViewById<CheckBox>(Resource.Id.cbDVibration);
+		downloadVibration.Checked = _settings.downloadVibration;
+		downloadVibration.CheckedChange += delegate {
+			_settings.downloadVibration = downloadVibration.Checked;
+			_settings.commit();
 		};
 
 		var uploadSound = FindViewById<Button>(Resource.Id.btnUploadSound);
 		uploadSound.Click += delegate {
-			pickRingtone();
-		};
-
-		var downloadNotifications = FindViewById<CheckBox>(Resource.Id.cbDownloadNotifications);
-		downloadNotifications.Checked = true;
-		downloadNotifications.CheckedChange += delegate {
-		};
-
-		var downloadVibrate = FindViewById<CheckBox>(Resource.Id.cbDVibration);
-		downloadVibrate.CheckedChange += delegate {
+			pickRingtone(RequestCode.UploadSound);
 		};
 
 		var downloadSound = FindViewById<Button>(Resource.Id.btnDownloadSound);
 		downloadSound.Click += delegate {
-			pickRingtone();
+			pickRingtone(RequestCode.DownloadSound);
 		};
 
 		var done = FindViewById<Button>(Resource.Id.btnOkay);
@@ -69,15 +86,54 @@ public class ConfigureNotificationsActivity : Activity
 		};
 	}
 
-	void pickRingtone()
+	protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
 	{
+		if (resultCode == Result.Ok)
+		{
+			switch(requestCode) {
+				case RequestCode.DownloadSound:
+					_settings.downloadSound = data.GetParcelableExtra(RingtoneManager.ExtraRingtonePickedUri).ToString();
+					_settings.commit();
+					Console.WriteLine("Set downloadSound = " + _settings.downloadSound);
+					break;
+				case RequestCode.UploadSound:
+					_settings.uploadSound = data.GetParcelableExtra(RingtoneManager.ExtraRingtonePickedUri).ToString();
+					_settings.commit();
+					Console.WriteLine("Set uploadSound = " + _settings.uploadSound);
+					break;
+				default:
+					// Don't know how to handle other kinds of requests
+					return;
+			}
+		}
+	}
+
+	void pickRingtone(int requestCode)
+	{
+		string title;
+		Uri uri;
+		switch(requestCode) {
+			case RequestCode.DownloadSound:
+				title = "Download notification sound";
+				uri = Uri.Parse(_settings.downloadSound);
+				break;
+			case RequestCode.UploadSound:
+				title = "Upload notification sound";
+				uri = Uri.Parse(_settings.uploadSound);
+				break;
+			default:
+				// Don't know how to handle other kinds of requests
+				return;
+		}
+
 		Intent intent = new Intent(RingtoneManager.ActionRingtonePicker);
-		intent.PutExtra(RingtoneManager.ExtraRingtoneTitle, "Select notification sound:");
+		intent.PutExtra(RingtoneManager.ExtraRingtoneTitle, title);
 		intent.PutExtra(RingtoneManager.ExtraRingtoneShowSilent, true);
 		intent.PutExtra(RingtoneManager.ExtraRingtoneShowDefault, true);
 		intent.PutExtra(RingtoneManager.ExtraRingtoneType, (int)RingtoneType.Notification);
-		intent.PutExtra(RingtoneManager.ExtraRingtoneExistingUri, RingtoneManager.GetDefaultUri(RingtoneType.Notification));
-		StartActivityForResult(intent, 0);
+		Console.WriteLine("ExtraRingtoneExistingUri: " + uri.ToString());
+		intent.PutExtra(RingtoneManager.ExtraRingtoneExistingUri, uri);
+		StartActivityForResult(intent, requestCode);
 	}
 }
 
