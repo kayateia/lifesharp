@@ -62,7 +62,7 @@ static public class Notifications
 		Settings settings = new Settings(context);
 		Uri soundUri = settings.uploadSound != null ? Uri.Parse(settings.uploadSound) : null;
 		Intent intent = GetBaseIntent(context, imagePath);
-		NotifyCommon(context, id, replace, tickerText, title, text, Resource.Drawable.TransferDown, intent, false, soundUri, settings.uploadVibration, Uri.Parse("file://" + thumbnailPath));
+		NotifyCommon(context, id, replace, tickerText, title, text, Resource.Drawable.TransferUp, intent, false, soundUri, settings.uploadVibration, Uri.Parse("file://" + thumbnailPath));
 	}
 
 	static public void NotifyCommon(Context context, int id, bool replace,
