@@ -36,13 +36,30 @@ public class PhotoMediaObserver : ContentObserver
 		bool anyNew = false;
 
 		var uri = MediaStore.Images.Media.ExternalContentUri;
-		using (var cursor = _context.ContentResolver.Query(uri, null, null, null, "date_added DESC"))
+		using (var cursor = _context.ContentResolver.Query(
+				uri,
+				new String[] {
+					MediaStore.MediaColumns.Data,
+					MediaStore.MediaColumns.MimeType,
+					MediaStore.MediaColumns.DateAdded
+				},
+				// Skip files downloaded by DownloadService
+				MediaStore.MediaColumns.Data + " NOT LIKE ?",
+				new String[] {
+					DownloadService.storageRoot + "%"
+				},
+				"date_added DESC"
+			))
 		{
 			int dataColumn = cursor.GetColumnIndexOrThrow(MediaStore.MediaColumns.Data);
 			int mimeTypeColumn = cursor.GetColumnIndexOrThrow(MediaStore.MediaColumns.MimeType);
 			int timestampColumn = cursor.GetColumnIndexOrThrow(MediaStore.MediaColumns.DateAdded);
 			while (cursor.MoveToNext())
 			{
+				if (cursor.IsNull(dataColumn)) {
+					Console.WriteLine("PhotoMediaObserver.OnChange(): filePath is null, which indicates this row is invalid (deleted?). Skip this file.");
+					continue;
+				}
 				string filePath = cursor.GetString(dataColumn);
 				string mimeType = cursor.GetString(mimeTypeColumn);
 				long timestamp = cursor.GetLong(timestampColumn);
@@ -53,16 +70,9 @@ public class PhotoMediaObserver : ContentObserver
 
 				if (timestamp > lastImageTimestamp)
 				{
-					if (DownloadService.IsOneOfOurs(filePath))
-					{
-						Log.Info(LogTag, "{0} is one of ours; skipping", filePath);
-					}
-					else
-					{
-						Log.Info(LogTag, "Found file: {0} {1}", filePath, mimeType);
-						ImageDatabaseAndroid.GetSingleton(_context).addToUploadQueue(filePath, DateTimeOffset.UtcNow/*.AddMinutes(1)*/, "");
-						anyNew = true;
-					}
+					Log.Info(LogTag, "Found file: {0} {1}", filePath, mimeType);
+					ImageDatabaseAndroid.GetSingleton(_context).addToUploadQueue(filePath, DateTimeOffset.UtcNow/*.AddMinutes(1)*/, "");
+					anyNew = true;
 				}
 			}
 		}

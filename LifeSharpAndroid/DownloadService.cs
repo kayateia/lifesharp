@@ -38,6 +38,7 @@ public class DownloadService : ILifeSharpService
 {
 	const string LogTag = "LifeSharp/DownloadService";
 	object _lock = new object();
+	public static string _storageRoot = null;
 
 	public DownloadService()
 	{
@@ -230,9 +231,22 @@ public class DownloadService : ILifeSharpService
 	// Returns true if the path represents an image we downloaded.
 	public static bool IsOneOfOurs(string imagePath)
 	{
-		string sdcard = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;
-		string path = Path.Combine(sdcard, "Pictures", "LifeSharp");
-		return imagePath.StartsWith(path);
+		return imagePath.StartsWith(storageRoot);
+	}
+
+	// Root directory of filesystem location where downloaded images are stored.
+	public static string storageRoot
+	{
+		get
+		{
+			if (_storageRoot == null)
+			{
+				string sdcard = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;
+				_storageRoot = Path.Combine(sdcard, "Pictures", "LifeSharp");
+
+			}
+			return _storageRoot;
+		}
 	}
 }
 
