@@ -51,16 +51,18 @@ static public class Notifications
 	static public void NotifyDownload(Context context, int id, bool replace, string tickerText, string title, string text, Uri imageUri)
 	{
 		Settings settings = new Settings(context);
+		Uri soundUri = settings.downloadSound != null ? Uri.Parse(settings.downloadSound) : null;
 		Intent intent = GetBaseIntent(context, "");
 		intent.SetDataAndType(imageUri, "image/*");
-		NotifyCommon(context, id, replace, tickerText, title, text, Resource.Drawable.TransferDown, intent, true, Uri.Parse(settings.downloadSound), settings.downloadVibration, imageUri);
+		NotifyCommon(context, id, replace, tickerText, title, text, Resource.Drawable.TransferDown, intent, true, soundUri, settings.downloadVibration, imageUri);
 	}
 
 	static public void NotifyUpload(Context context, int id, bool replace, string tickerText, string title, string text, string imagePath, string thumbnailPath)
 	{
 		Settings settings = new Settings(context);
+		Uri soundUri = settings.uploadSound != null ? Uri.Parse(settings.uploadSound) : null;
 		Intent intent = GetBaseIntent(context, imagePath);
-		NotifyCommon(context, id, replace, tickerText, title, text, Resource.Drawable.TransferDown, intent, false, Uri.Parse(settings.uploadSound), settings.uploadVibration, Uri.Parse("file://" + thumbnailPath));
+		NotifyCommon(context, id, replace, tickerText, title, text, Resource.Drawable.TransferDown, intent, false, soundUri, settings.uploadVibration, Uri.Parse("file://" + thumbnailPath));
 	}
 
 	static public void NotifyCommon(Context context, int id, bool replace,
@@ -72,7 +74,6 @@ static public class Notifications
 			flags = PendingIntentFlags.CancelCurrent;
 		PendingIntent contentIntent = PendingIntent.GetActivity(context, id, notificationIntent, flags);
 
-		Settings settings = new Settings(context);
 		NotificationDefaults defaults = 0;
 		if (vibration && soundUri != null && showLed)
 			defaults = NotificationDefaults.All;
@@ -83,7 +84,7 @@ static public class Notifications
 			defaults |= (showLed) ? NotificationDefaults.Lights : 0;
 		}
 
-		Console.WriteLine("Using notification sound: " + soundUri.ToString());
+		Console.WriteLine("Setting notification sound: " + soundUri);
 		Notification.Builder notificationBuilder = new Notification.Builder(context)
 			.SetDefaults(defaults)
 			.SetSound(soundUri)
@@ -114,6 +115,7 @@ static public class Notifications
 
 		if (notification == null)
 			notification = notificationBuilder.Build();
+		Console.WriteLine("Using notification sound: " + notification.Sound);
 
 		NotificationManager notificationManager = (NotificationManager)context.GetSystemService(Context.NotificationService);
 		notificationManager.Notify(id, notification);

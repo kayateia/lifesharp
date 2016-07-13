@@ -30,8 +30,8 @@ public class ConfigureNotificationsActivity : Activity
 	Settings _settings;
 
 	class RequestCode {
-		public const int DownloadSound = 1000;
-		public const int UploadSound = 1001;
+		public const int DownloadSound = 100;
+		public const int UploadSound = 200;
 	}
 
 	protected override void OnCreate(Bundle savedInstanceState)
@@ -88,16 +88,20 @@ public class ConfigureNotificationsActivity : Activity
 
 	protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
 	{
+		Uri pickedUri;
+
 		if (resultCode == Result.Ok)
 		{
 			switch(requestCode) {
 				case RequestCode.DownloadSound:
-					_settings.downloadSound = data.GetParcelableExtra(RingtoneManager.ExtraRingtonePickedUri).ToString();
+					pickedUri = (Uri)data.GetParcelableExtra(RingtoneManager.ExtraRingtonePickedUri);
+					_settings.downloadSound = pickedUri != null ? pickedUri.ToString() : null;
 					_settings.commit();
 					Console.WriteLine("Set downloadSound = " + _settings.downloadSound);
 					break;
 				case RequestCode.UploadSound:
-					_settings.uploadSound = data.GetParcelableExtra(RingtoneManager.ExtraRingtonePickedUri).ToString();
+					pickedUri = (Uri)data.GetParcelableExtra(RingtoneManager.ExtraRingtonePickedUri);
+					_settings.uploadSound = pickedUri != null ? pickedUri.ToString() : null;
 					_settings.commit();
 					Console.WriteLine("Set uploadSound = " + _settings.uploadSound);
 					break;
@@ -115,11 +119,11 @@ public class ConfigureNotificationsActivity : Activity
 		switch(requestCode) {
 			case RequestCode.DownloadSound:
 				title = "Download notification sound";
-				uri = Uri.Parse(_settings.downloadSound);
+				uri = _settings.downloadSound != null ? Uri.Parse(_settings.downloadSound) : null;
 				break;
 			case RequestCode.UploadSound:
 				title = "Upload notification sound";
-				uri = Uri.Parse(_settings.uploadSound);
+				uri = _settings.uploadSound != null ? Uri.Parse(_settings.uploadSound) : null;
 				break;
 			default:
 				// Don't know how to handle other kinds of requests
@@ -131,7 +135,8 @@ public class ConfigureNotificationsActivity : Activity
 		intent.PutExtra(RingtoneManager.ExtraRingtoneShowSilent, true);
 		intent.PutExtra(RingtoneManager.ExtraRingtoneShowDefault, true);
 		intent.PutExtra(RingtoneManager.ExtraRingtoneType, (int)RingtoneType.Notification);
-		Console.WriteLine("ExtraRingtoneExistingUri: " + uri.ToString());
+		intent.PutExtra(RingtoneManager.ExtraRingtoneDefaultUri, RingtoneManager.GetDefaultUri(RingtoneType.Notification));
+		Console.WriteLine("ExtraRingtoneExistingUri: " + uri);
 		intent.PutExtra(RingtoneManager.ExtraRingtoneExistingUri, uri);
 		StartActivityForResult(intent, requestCode);
 	}
