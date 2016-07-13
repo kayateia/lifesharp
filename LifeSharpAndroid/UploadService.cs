@@ -68,8 +68,12 @@ public class UploadService : ILifeSharpService
 			string destfn = GetThumbnailPath(context, i);
 			if (!File.Exists(destfn))
 				scaleImage(i.sourcePath, destfn);
-			if (uploadImage(i, destfn, settings.authToken, (int)settings.defaultStream).Result)
+			if (uploadImage(i, destfn, settings.authToken, (int)settings.defaultStream).Result) {
 				db.markSent(i.id);
+				if (settings.uploadNotifications) {
+					Notifications.NotifyUpload(context, 200, true, "Uploaded image", "Uploaded image", "", i.sourcePath, destfn);
+				}
+			}
 		}
 	}
 

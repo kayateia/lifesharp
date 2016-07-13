@@ -136,7 +136,9 @@ public class DownloadService : ILifeSharpService
 					if (--imageCount == 0)
 					{
 						string message = GetNotificationMessage(completedImages, completedImagesTotal);
-						Notifications.NotifyDownload(context, 100, true, message, message, "", uri);
+						if (settings.downloadNotifications) {
+							Notifications.NotifyDownload(context, 100, true, message, message, "", uri);
+						}
 					}
 				}
 			};
