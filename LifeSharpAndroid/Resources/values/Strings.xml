@@ -9,4 +9,7 @@
 	<string name="upload_notification_enable">Notify on upload</string>
 	<string name="upload_notification_sound">Upload notfication sound</string>
 	<string name="upload_notification_vibrate">Vibrate</string>
+	<string name="sound_default">System default</string>
+	<string name="sound_none">None</string>
+	<string name="sound_unknown">Unknown</string>
 </resources>

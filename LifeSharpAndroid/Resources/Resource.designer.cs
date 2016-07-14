@@ -2384,6 +2384,15 @@ namespace LifeSharp
 			// aapt resource value: 0x7f070033
 			public const int library_name = 2131165235;
 			
+			// aapt resource value: 0x7f07003d
+			public const int sound_default = 2131165245;
+			
+			// aapt resource value: 0x7f07003e
+			public const int sound_none = 2131165246;
+			
+			// aapt resource value: 0x7f07003f
+			public const int sound_unknown = 2131165247;
+			
 			// aapt resource value: 0x7f070032
 			public const int status_bar_notification_info_overflow = 2131165234;
 			
