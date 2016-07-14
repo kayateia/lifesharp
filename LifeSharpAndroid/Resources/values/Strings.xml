@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="hello">Hello World, Click Me!</string>
 	<string name="app_name">LifeSharp</string>
+	<string name="download_notification_settings">Download notifications</string>
+	<string name="download_notification_enable">Notify on download</string>
+	<string name="download_notification_sound">Download notification sound</string>
+	<string name="download_notification_vibrate">Vibrate</string>
+	<string name="upload_notification_settings">Upload notifications</string>
+	<string name="upload_notification_enable">Notify on upload</string>
+	<string name="upload_notification_sound">Upload notfication sound</string>
+	<string name="upload_notification_vibrate">Vibrate</string>
 </resources>

@@ -8,6 +8,8 @@
 
 using System;
 using Android.Content;
+using Android.OS;
+using Android.Preferences;
 
 namespace LifeSharp
 {
@@ -20,7 +22,6 @@ public class Settings
 	// These are the names of the pref items we'll be storing.
 	class Prefs
 	{
-		public const string Name = "LifeSharpPrefs";
 		public const string AfterFirstRun = "afterFirstRun";
 		public const string User = "username";
 		public const string UserId = "userid";
@@ -71,7 +72,9 @@ public class Settings
 	public Settings(Context context)
 	{
 		_context = context;
-		_settings = _context.GetSharedPreferences(Prefs.Name, FileCreationMode.Private);
+		// Get default shared preferences for this context. This is the SharedPreferences object
+		// that will be used by all PreferenceFragment objects in this application.
+		_settings = PreferenceManager.GetDefaultSharedPreferences(_context);
 	}
 
 	void edit()
@@ -134,11 +137,11 @@ public class Settings
 	{
 		get
 		{
-			return getString(Prefs.Name, "");
+			return getString(Prefs.User, "");
 		}
 		set
 		{
-			setString(Prefs.Name, value);
+			setString(Prefs.User, value);
 		}
 	}
 

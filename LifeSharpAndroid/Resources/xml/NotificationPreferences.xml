@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory
+		android:key="uploadNotificationSettings"
+		android:title="@string/upload_notification_settings">
+	    <SwitchPreference
+			android:key="uploadNotifications"
+			android:title="@string/upload_notification_enable"
+			android:defaultValue="true" />
+	    <SwitchPreference
+			android:key="uploadVibration"
+			android:title="@string/upload_notification_vibrate"
+			android:defaultValue="true" />
+	    <RingtonePreference
+			android:key="uploadSound"
+			android:title="@string/upload_notification_sound"
+			android:ringtoneType="notification"
+			android:showDefault="true"
+			android:showSilent="true" />
+	</PreferenceCategory>
+	<PreferenceCategory
+		android:key="downloadNotificationSettings"
+		android:title="@string/download_notification_settings">
+	    <SwitchPreference
+			android:key="downloadNotifications"
+			android:title="@string/download_notification_enable"
+			android:defaultValue="true" />
+	    <SwitchPreference
+			android:key="downloadVibration"
+			android:title="@string/download_notification_vibrate"
+			android:defaultValue="true" />
+	    <RingtonePreference
+			android:key="downloadSound"
+			android:title="@string/download_notification_sound"
+			android:ringtoneType="notification"
+			android:showDefault="true"
+			android:showSilent="true" />
+	</PreferenceCategory>
+</PreferenceScreen>

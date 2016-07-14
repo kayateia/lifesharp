@@ -12,11 +12,9 @@ using System.Linq;
 using Android.App;
 using Android.Content;
 using Android.Media;
-using Android.Runtime;
-using Android.Views;
+using Android.Preferences;
 using Android.Widget;
 using Android.OS;
-using Android.Util;
 using System.Threading.Tasks;
 
 namespace LifeSharp
@@ -43,6 +41,9 @@ public class MainActivity : Activity
 
 		// First run initialisation.
 		if (!settings.afterFirstRun) {
+			// Set default values from NotificationPreferences.xml
+			PreferenceManager.SetDefaultValues(ApplicationContext, Resource.Xml.NotificationPreferences, true);
+
 			// If notification sound is null, set it to the system-default sound
 			if (settings.downloadSound == null) {
 				settings.downloadSound = RingtoneManager.GetDefaultUri(RingtoneType.Notification).ToString();
@@ -149,6 +150,7 @@ public class MainActivity : Activity
 			_streamIds = streams.streams.Select(x => x.id).ToArray();
 			var adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleSpinnerItem,
 				streams.streams.Select(x => x.name).ToArray());
+			adapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
 			var defaultStreamSpinner = FindViewById<Spinner>(Resource.Id.defaultStream);
 			defaultStreamSpinner.Adapter = adapter;
 

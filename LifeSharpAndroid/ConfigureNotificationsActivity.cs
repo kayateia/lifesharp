@@ -7,135 +7,91 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using Android.App;
 using Android.Content;
-using Android.Media;
 using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
+using Android.Preferences;
+using Android.Provider;
 
 using Uri = Android.Net.Uri;
 
 namespace LifeSharp
 {
 
+public class NotificationPreferencesFragment : PreferenceFragment
+{
+	Context _context;
+	Settings _settings;
+
+	string ConvertSoundUriToTitle(string soundUri)
+	{
+		string title = null;
+
+		if (soundUri == null) {
+			return null;
+		}
+
+		// Query the ContentProvider for information about the Uri.
+		using (var cursor = _context.ContentResolver.Query(
+			Uri.Parse(soundUri),
+			new String[] { MediaStore.MediaColumns.Title },
+			null,
+			null,
+			null))
+		{
+			// We want the sound file's title metadata.
+			var titleColumn = cursor.GetColumnIndexOrThrow(MediaStore.MediaColumns.Title);
+			if (cursor != null && cursor.MoveToFirst()) {
+				title = cursor.GetString(titleColumn);
+			}
+		}
+
+		return title;
+	}
+
+	void OnRingtoneChange(Object sender, Preference.PreferenceChangeEventArgs e)
+	{
+		((Preference)sender).Summary = ConvertSoundUriToTitle(e.NewValue.ToString());
+	}
+
+	public override void OnAttach(Activity activity)
+	{
+		base.OnAttach(activity);
+
+		_context = activity;
+		_settings = new Settings(_context);
+	}
+
+	public override void OnCreate(Bundle savedInstanceState)
+	{
+		base.OnCreate (savedInstanceState);
+
+		// Read preferences to display from XML file
+		AddPreferencesFromResource(Resource.Xml.NotificationPreferences);
+
+		// Set summary text for notification sound preferences on page load.
+		var downloadSoundPreference = FindPreference("downloadSound");
+		downloadSoundPreference.Summary = ConvertSoundUriToTitle(_settings.downloadSound);
+		var uploadSoundPreference = FindPreference("uploadSound");
+		uploadSoundPreference.Summary = ConvertSoundUriToTitle(_settings.uploadSound);
+
+		// Update summary text after user selects different notification sound.
+		downloadSoundPreference.PreferenceChange += OnRingtoneChange;
+		uploadSoundPreference.PreferenceChange += OnRingtoneChange;
+	}
+}
+
 [Activity(Label = "ConfigureNotificationsActivity")]
 public class ConfigureNotificationsActivity : Activity
 {
-	Settings _settings;
-
-	class RequestCode {
-		public const int DownloadSound = 100;
-		public const int UploadSound = 200;
-	}
-
 	protected override void OnCreate(Bundle savedInstanceState)
 	{
 		base.OnCreate(savedInstanceState);
 
-		SetContentView(Resource.Layout.ConfigureNotifications);
-
-		_settings = new Settings(ApplicationContext);
-
-		var uploadNotifications = FindViewById<CheckBox>(Resource.Id.cbUploadNotifications);
-		uploadNotifications.Checked = _settings.uploadNotifications;
-		uploadNotifications.CheckedChange += delegate {
-			_settings.uploadNotifications = uploadNotifications.Checked;
-			_settings.commit();
-		};
-
-		var downloadNotifications = FindViewById<CheckBox>(Resource.Id.cbDownloadNotifications);
-		downloadNotifications.Checked = _settings.downloadNotifications;
-		downloadNotifications.CheckedChange += delegate {
-			_settings.downloadNotifications = downloadNotifications.Checked;
-			_settings.commit();
-		};
-
-		var uploadVibration = FindViewById<CheckBox>(Resource.Id.cbUVibration);
-		uploadVibration.Checked = _settings.uploadVibration;
-		uploadVibration.CheckedChange += delegate {
-			_settings.uploadVibration = uploadVibration.Checked;
-			_settings.commit();
-		};
-
-		var downloadVibration = FindViewById<CheckBox>(Resource.Id.cbDVibration);
-		downloadVibration.Checked = _settings.downloadVibration;
-		downloadVibration.CheckedChange += delegate {
-			_settings.downloadVibration = downloadVibration.Checked;
-			_settings.commit();
-		};
-
-		var uploadSound = FindViewById<Button>(Resource.Id.btnUploadSound);
-		uploadSound.Click += delegate {
-			pickRingtone(RequestCode.UploadSound);
-		};
-
-		var downloadSound = FindViewById<Button>(Resource.Id.btnDownloadSound);
-		downloadSound.Click += delegate {
-			pickRingtone(RequestCode.DownloadSound);
-		};
-
-		var done = FindViewById<Button>(Resource.Id.btnOkay);
-		done.Click += delegate {
-			Finish();
-		};
-	}
-
-	protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
-	{
-		Uri pickedUri;
-
-		if (resultCode == Result.Ok)
-		{
-			switch(requestCode) {
-				case RequestCode.DownloadSound:
-					pickedUri = (Uri)data.GetParcelableExtra(RingtoneManager.ExtraRingtonePickedUri);
-					_settings.downloadSound = pickedUri != null ? pickedUri.ToString() : null;
-					_settings.commit();
-					break;
-				case RequestCode.UploadSound:
-					pickedUri = (Uri)data.GetParcelableExtra(RingtoneManager.ExtraRingtonePickedUri);
-					_settings.uploadSound = pickedUri != null ? pickedUri.ToString() : null;
-					_settings.commit();
-					break;
-				default:
-					// Don't know how to handle other kinds of requests
-					return;
-			}
-		}
-	}
-
-	void pickRingtone(int requestCode)
-	{
-		string title;
-		Uri uri;
-		switch(requestCode) {
-			case RequestCode.DownloadSound:
-				title = "Download notification sound";
-				uri = _settings.downloadSound != null ? Uri.Parse(_settings.downloadSound) : null;
-				break;
-			case RequestCode.UploadSound:
-				title = "Upload notification sound";
-				uri = _settings.uploadSound != null ? Uri.Parse(_settings.uploadSound) : null;
-				break;
-			default:
-				// Don't know how to handle other kinds of requests
-				return;
-		}
-
-		Intent intent = new Intent(RingtoneManager.ActionRingtonePicker);
-		intent.PutExtra(RingtoneManager.ExtraRingtoneTitle, title);
-		intent.PutExtra(RingtoneManager.ExtraRingtoneShowSilent, true);
-		intent.PutExtra(RingtoneManager.ExtraRingtoneShowDefault, true);
-		intent.PutExtra(RingtoneManager.ExtraRingtoneType, (int)RingtoneType.Notification);
-		intent.PutExtra(RingtoneManager.ExtraRingtoneDefaultUri, RingtoneManager.GetDefaultUri(RingtoneType.Notification));
-		intent.PutExtra(RingtoneManager.ExtraRingtoneExistingUri, uri);
-		StartActivityForResult(intent, requestCode);
+		// Use PreferenceFragment generated from XML file
+		FragmentManager.BeginTransaction().Replace(Android.Resource.Id.Content,
+			new NotificationPreferencesFragment()).Commit();
 	}
 }
 
