@@ -10,6 +10,7 @@ using System;
 using System.Linq;
 
 using Android.App;
+using Android.Support.V7.App;
 using Android.Content;
 using Android.Media;
 using Android.Preferences;
@@ -17,11 +18,15 @@ using Android.Widget;
 using Android.OS;
 using System.Threading.Tasks;
 
+using Toolbar = Android.Support.V7.Widget.Toolbar;
+
 namespace LifeSharp
 {
 
-[Activity(Label = "LifeSharp", MainLauncher = true, Icon = "@drawable/icon")]
-public class MainActivity : Activity
+[Activity(Label = "@string/app_name",	// Action bar title text
+	MainLauncher = true,				// Launcher activates this activity
+	Icon = "@drawable/icon")]			// Application icon
+public class MainActivity : AppCompatActivity
 {
 	protected override async void OnCreate(Bundle bundle)
 	{
@@ -31,6 +36,13 @@ public class MainActivity : Activity
 
 		// Set our view from the "main" layout resource
 		SetContentView(Resource.Layout.Main);
+
+		// Set support action bar based on toolbar from layout XML
+		var mainToolbar = FindViewById<Toolbar>(Resource.Id.mainToolbar);
+		SetSupportActionBar(mainToolbar);
+
+		// Add icon to action bar
+		mainToolbar.SetLogo(Resource.Drawable.Icon);
 
 		Settings settings = new Settings(ApplicationContext);
 		var statusLabel = FindViewById<TextView>(Resource.Id.loginStatus);

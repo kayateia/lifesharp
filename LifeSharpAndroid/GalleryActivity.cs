@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 
 using Android.App;
+using Android.Support.V7.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
@@ -19,17 +20,28 @@ using Android.Views;
 using Android.Widget;
 using Android.Support.V7.Widget;
 
+using Toolbar = Android.Support.V7.Widget.Toolbar;
+
 namespace LifeSharp
 {
 
-[Activity(Label = "GalleryActivity")]
-public class GalleryActivity : Activity
+[Activity(Label = "GalleryActivity",		// Action bar title text
+	ParentActivity = typeof(MainActivity))]	// Up button target activity
+public class GalleryActivity : AppCompatActivity
 {
 	protected override void OnCreate(Bundle savedInstanceState)
 	{
 		base.OnCreate(savedInstanceState);
 
+		// Set content view from layout XML
 		SetContentView(Resource.Layout.Gallery);
+
+		// Set support action bar based on Toolbar from layout XML
+		var galleryToolbar = FindViewById<Toolbar>(Resource.Id.galleryToolbar);
+		SetSupportActionBar(galleryToolbar);
+
+		// Enable Up button in action bar
+		SupportActionBar.SetDisplayHomeAsUpEnabled(true);
 
 		_recycler = FindViewById<RecyclerView>(Resource.Id.recyclerView);
 		_layout = new GridLayoutManager(this, 4);

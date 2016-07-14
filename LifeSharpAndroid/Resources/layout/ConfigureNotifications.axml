@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/configureNotificationsContainer"
     android:orientation="vertical"
-    android:minWidth="25px"
-    android:minHeight="25px"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/linearLayout1">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
     <android.support.v7.widget.Toolbar
-        android:id="@+id/galleryToolbar"
+        android:id="@+id/configureNotificationsToolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat" />
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:scrollbars="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
 </LinearLayout>

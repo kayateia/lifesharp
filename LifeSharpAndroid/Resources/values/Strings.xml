@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">LifeSharp</string>
+	<string name="configure_notifications_activity_title">Notification Settings</string>
+	<string name="gallery_activity_title">Gallery</string>
 	<string name="download_notification_settings">Download notifications</string>
 	<string name="download_notification_enable">Notify on download</string>
 	<string name="download_notification_sound">Download notification sound</string>
