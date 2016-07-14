@@ -583,6 +583,22 @@ namespace LifeSharp
 			}
 		}
 		
+		public partial class Style
+		{
+			
+			// aapt resource value: 0x7f090000
+			public const int AppTheme = 2131296256;
+			
+			static Style()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Style()
+			{
+			}
+		}
+		
 		public partial class Styleable
 		{
 			

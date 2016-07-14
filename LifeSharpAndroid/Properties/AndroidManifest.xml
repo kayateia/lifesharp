@@ -1,10 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="net.kayateia.lifesharp">
-	<uses-sdk android:minSdkVersion="16" android:targetSdkVersion="19" />
-	<application android:label="LifeSharp" android:theme="@android:style/Theme.Holo">
-		<receiver android:name="com.google.android.gms.gcm.GcmReceiver"
-			android:exported="true"
-			android:permission="com.google.android.c2dm.permission.SEND">
+	<uses-sdk />
+	<application android:label="LifeSharp" android:theme="@style/AppTheme">
+		<receiver android:name="com.google.android.gms.gcm.GcmReceiver" android:exported="true" android:permission="com.google.android.c2dm.permission.SEND">
 			<intent-filter>
 				<action android:name="com.google.android.c2dm.intent.RECEIVE" />
 				<action android:name="com.google.android.c2dm.intent.REGISTRATION" />
@@ -20,6 +18,5 @@
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-	<permission android:name="net.kayateia.lifesharp.permission.C2D_MESSAGE"
-		android:protectionLevel="signature" />
+	<permission android:name="net.kayateia.lifesharp.permission.C2D_MESSAGE" android:protectionLevel="signature" />
 </manifest>
