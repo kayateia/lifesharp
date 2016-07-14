@@ -110,11 +110,14 @@ public class MainActivity : Activity
 
 				// Get our user ID.
 				Protocol.LoginInfo loginInfo = await Network.GetLoginInfo(result, settings.userName);
-				if (loginInfo.succeeded())
+				if (loginInfo.succeeded()) {
 					settings.userId = loginInfo.id;
+					// Commit so that user ID is available to upcoming fillStreams() call.
+					settings.commit();
+				}
 
+				// Obtain list of streams owned by user.
 				await fillStreams(settings);
-
 				settings.commit();
 
 				// This won't have already happened if we didn't have login info.
