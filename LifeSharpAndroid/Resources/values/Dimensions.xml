@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+	<dimen name="list_item_height">72dp</dimen>
+	<dimen name="subtitle_height">48dp</dimen>
+	<dimen name="subtitle_text_size">16sp</dimen>
+	<dimen name="switch_elevation">1dp</dimen>
+	<dimen name="title_height">72dp</dimen>
+	<dimen name="toolbar_height">56dp</dimen>
+	<dimen name="view_padding_top">16dp</dimen>
+	<dimen name="view_padding_right">16dp</dimen>
+	<dimen name="view_padding_bottom">0dp</dimen>
+	<dimen name="view_padding_left">16dp</dimen>
+</resources>
