@@ -43,6 +43,9 @@ public class GalleryActivity : AppCompatActivity
 		// Enable Up button in action bar
 		SupportActionBar.SetDisplayHomeAsUpEnabled(true);
 
+		// Set flag to allow status bar colour to be managed by this activity.
+		Window.SetFlags(Android.Views.WindowManagerFlags.DrawsSystemBarBackgrounds, Android.Views.WindowManagerFlags.DrawsSystemBarBackgrounds);
+
 		_recycler = FindViewById<RecyclerView>(Resource.Id.recyclerView);
 		_layout = new GridLayoutManager(this, 4);
 		_recycler.SetLayoutManager(_layout);

@@ -44,6 +44,9 @@ public class MainActivity : AppCompatActivity
 		// Add icon to action bar
 		mainToolbar.SetLogo(Resource.Drawable.Icon);
 
+		// Set flag to allow status bar colour to be managed by this activity.
+		Window.SetFlags(Android.Views.WindowManagerFlags.DrawsSystemBarBackgrounds, Android.Views.WindowManagerFlags.DrawsSystemBarBackgrounds);
+
 		Settings settings = new Settings(ApplicationContext);
 		var statusLabel = FindViewById<TextView>(Resource.Id.loginStatus);
 		var enabled = FindViewById<CheckBox>(Resource.Id.checkEnable);

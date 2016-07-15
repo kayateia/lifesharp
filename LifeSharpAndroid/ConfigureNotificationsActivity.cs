@@ -31,7 +31,7 @@ public class NotificationPreferencesFragment : PreferenceFragment
 	{
 		string title = null;
 
-		if (soundUri == null || soundUri == "") {
+		if (soundUri.IsNullOrEmpty()) {
 			title = GetString(Resource.String.sound_none);
 		}
 		else if (RingtoneManager.IsDefault(Uri.Parse(soundUri))) {
@@ -60,7 +60,6 @@ public class NotificationPreferencesFragment : PreferenceFragment
 				Console.WriteLine("ConvertSoundUriToTitle(): Couldn't get title: " + e);
 			}
 		}
-
 
 		return title;
 	}
@@ -119,6 +118,9 @@ public class ConfigureNotificationsActivity : AppCompatActivity
 		// Append NotificationPreferencesFragment to container specified in layout XML
 		FragmentManager.BeginTransaction().Add(Resource.Id.configureNotificationsContainer,
 			new NotificationPreferencesFragment()).Commit();
+
+		// Set flag to allow status bar colour to be managed by this activity.
+		Window.SetFlags(Android.Views.WindowManagerFlags.DrawsSystemBarBackgrounds, Android.Views.WindowManagerFlags.DrawsSystemBarBackgrounds);
 	}
 }
 
