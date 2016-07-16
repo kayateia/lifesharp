@@ -39,15 +39,22 @@ public class LifeSharpService : Service
 
 	static LifeSharpService s_instance;
 	bool _initted = false;
-	static ILifeSharpService[] s_services;
+	static ILifeSharpService[] s_servicesCache;
 	Settings _settings;
+
+	static ILifeSharpService[] s_services
+	{
+		get
+		{
+			if (s_servicesCache == null)
+				s_servicesCache = GetServices().ToArray();
+			return s_servicesCache;
+		}
+	}
 
 	static public void Start(Context context)
 	{
 		Log.Info(LogTag, "LifeSharp Service Start request");
-
-		if (s_services == null)
-			s_services = GetServices().ToArray();
 
 		var lsServiceIntent = new Intent(context, typeof(LifeSharpService));
 		context.StartService(lsServiceIntent);
@@ -74,6 +81,9 @@ public class LifeSharpService : Service
 	{
 		if (!_initted)
 		{
+			// This can be a program entry point.
+			Log.SetLogger(new LogAndroid());
+
 			Log.Info(LogTag, "Started LifeSharp service");
 			s_instance = this;
 			_settings = new Settings(this.ApplicationContext);
