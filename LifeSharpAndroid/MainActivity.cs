@@ -16,6 +16,7 @@ using Android.Media;
 using Android.Preferences;
 using Android.Widget;
 using Android.OS;
+using Android.Views;
 using System.Threading.Tasks;
 
 using Toolbar = Android.Support.V7.Widget.Toolbar;
@@ -41,11 +42,8 @@ public class MainActivity : AppCompatActivity
 		var mainToolbar = FindViewById<Toolbar>(Resource.Id.mainToolbar);
 		SetSupportActionBar(mainToolbar);
 
-		// Add icon to action bar
-		mainToolbar.SetLogo(Resource.Drawable.Icon);
-
 		// Set flag to allow status bar colour to be managed by this activity.
-		Window.SetFlags(Android.Views.WindowManagerFlags.DrawsSystemBarBackgrounds, Android.Views.WindowManagerFlags.DrawsSystemBarBackgrounds);
+		Window.SetFlags(WindowManagerFlags.DrawsSystemBarBackgrounds, WindowManagerFlags.DrawsSystemBarBackgrounds);
 
 		Settings settings = new Settings(ApplicationContext);
 		var statusLabel = FindViewById<TextView>(Resource.Id.loginStatus);
