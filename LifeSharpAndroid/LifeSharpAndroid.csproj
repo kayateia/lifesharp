@@ -78,6 +78,9 @@
     <Reference Include="Xamarin.GooglePlayServices.Base">
       <HintPath>..\packages\Xamarin.GooglePlayServices.Base.29.0.0.2\lib\MonoAndroid41\Xamarin.GooglePlayServices.Base.dll</HintPath>
     </Reference>
+    <Reference Include="Xamarin.Android.Support.v7.CardView">
+      <HintPath>..\packages\Xamarin.Android.Support.v7.CardView.23.4.0.1\lib\MonoAndroid403\Xamarin.Android.Support.v7.CardView.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
@@ -135,6 +138,7 @@
     <AndroidResource Include="Resources\values\Dimensions.xml" />
     <AndroidResource Include="Resources\xml\NotificationPreferences.xml" />
     <AndroidResource Include="Resources\layout\ConfigureNotifications.axml" />
+    <AndroidResource Include="Resources\layout\GalleryCardView.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Android.Support.Vector.Drawable.23.4.0.1\build\Xamarin.Android.Support.Vector.Drawable.targets" Condition="Exists('..\packages\Xamarin.Android.Support.Vector.Drawable.23.4.0.1\build\Xamarin.Android.Support.Vector.Drawable.targets')" />
@@ -164,6 +168,10 @@
     </XamarinComponentReference>
     <XamarinComponentReference Include="modernhttpclient">
       <Version>2.4.2</Version>
+      <Visible>False</Visible>
+    </XamarinComponentReference>
+    <XamarinComponentReference Include="xamandroidsupportv7cardview">
+      <Version>23.1.1.1</Version>
       <Visible>False</Visible>
     </XamarinComponentReference>
   </ItemGroup>

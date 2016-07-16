@@ -7,14 +7,15 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Globalization;
+
 using Android.Database.Sqlite;
 using Android.Content;
 using Android.Database;
-using Android.Util;
 
 using Path = System.IO.Path;
-using System.Globalization;
 
 namespace LifeSharp
 {
@@ -316,6 +317,62 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 			values.Put(KeyState, (int)newState);
 			values.Put(KeyComment, comment);
 			db.Update(TableName, values, "rowid=?", new string[] { id.ToString() });
+		});
+	}
+
+	public UserSummary getUserSummary(string userLogin)
+	{
+		return performReadable("getUserSummary", (db) =>
+		{
+			UserSummary user = null;
+
+			using (ICursor cursor = db.Query(
+				TableName,
+				new string[] { "rowid", KeyUserLogin, "COUNT(*) AS numImages" },
+				KeyUserLogin + "=?",
+				new string[] { userLogin },
+				KeyUserLogin,
+				null,
+				"rowid DESC"))
+			{
+				if (cursor.MoveToFirst())
+				{
+					user = new UserSummary();
+					user.lastImage = getImageById(cursor.GetInt(0));
+					user.userLogin = cursor.GetString(1);
+					user.numImages = cursor.GetInt(2);
+				}
+			}
+
+			return user;
+		});
+	}
+
+	public List<UserSummary> getUserSummaries()
+	{
+		return performReadable("getUserSummaries", (db) =>
+		{
+			var users = new List<UserSummary>();
+
+			using (ICursor cursor = db.Query(
+				true,
+				TableName,
+				new string[] { KeyUserLogin },
+				KeyUserLogin + " IS NOT NULL",
+				null,
+				null,
+				null,
+				KeyUserLogin + " ASC",
+				null))
+			{
+				// Get a UserSummary object for each distinct user.
+				while (cursor.MoveToNext())
+				{
+					users.Add(getUserSummary(cursor.GetString(0)));
+				}
+			}
+
+			return users;
 		});
 	}
 }

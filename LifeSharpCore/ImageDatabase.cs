@@ -7,6 +7,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 namespace LifeSharp
 {
@@ -63,6 +64,19 @@ public interface IImageDatabase
 	/// Update the comment in the specified image, and put it back on the queue.
 	/// </summary>
 	void updateComment(int id, string comment);
+
+	/// <summary>
+	/// Instantiates a UserSummary for the given user.
+	/// </summary>
+	/// <param name="userLogin">User login</param>
+	/// <returns>UserSummary object for the given user.</returns>
+	UserSummary getUserSummary(string userLogin);
+
+	/// <summary>
+	/// Instantiates an array containing a UserSummary object for each distinct user.
+	/// </summary>
+	/// <returns>UserSummary array of distinct users.</returns>
+	List<UserSummary> getUserSummaries();
 }
 
 // Represents one image on the queue.
@@ -134,6 +148,12 @@ public class Image
 	public string comment { get; set; }
 }
 
+public class UserSummary
+{
+	public string userLogin { get; set; }
+	public int numImages { get; set; }
+	public Image lastImage { get; set; }
+}
 
 }
 

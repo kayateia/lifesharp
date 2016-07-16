@@ -15,6 +15,7 @@ using Android.Media;
 using Android.OS;
 using Android.Preferences;
 using Android.Provider;
+using Android.Views;
 
 using Toolbar = Android.Support.V7.Widget.Toolbar;
 using Uri = Android.Net.Uri;
@@ -120,7 +121,7 @@ public class ConfigureNotificationsActivity : AppCompatActivity
 			new NotificationPreferencesFragment()).Commit();
 
 		// Set flag to allow status bar colour to be managed by this activity.
-		Window.SetFlags(Android.Views.WindowManagerFlags.DrawsSystemBarBackgrounds, Android.Views.WindowManagerFlags.DrawsSystemBarBackgrounds);
+		Window.SetFlags(WindowManagerFlags.DrawsSystemBarBackgrounds, WindowManagerFlags.DrawsSystemBarBackgrounds);
 	}
 }
 
