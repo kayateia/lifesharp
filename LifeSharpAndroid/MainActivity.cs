@@ -117,10 +117,18 @@ public class MainActivity : AppCompatActivity
 			try
 			{
 				string result = await Network.Login(settings);
-				statusLabel.Text = "Logged in successfully";
-				settings.authToken = result;
-				settings.enabled = true;
-				enabled.Checked = true;
+				if (result == null)
+				{
+					statusLabel.Text = "Log in failed";
+					settings.authToken = null;
+					enabled.Checked = false;
+				}
+				else
+				{
+					statusLabel.Text = "Logged in successfully";
+					settings.authToken = result;
+					enabled.Checked = true;
+				}
 
 				// Get our user ID.
 				Protocol.LoginInfo loginInfo = await Network.GetLoginInfo(result, settings.userName);
