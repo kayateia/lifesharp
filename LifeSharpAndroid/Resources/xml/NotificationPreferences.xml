@@ -10,7 +10,7 @@
 	    <SwitchPreference
 			android:key="uploadVibration"
 			android:title="@string/upload_notification_vibrate"
-			android:defaultValue="true" />
+			android:defaultValue="false" />
 	    <RingtonePreference
 			android:key="uploadSound"
 			android:title="@string/upload_notification_sound"
@@ -28,7 +28,7 @@
 	    <SwitchPreference
 			android:key="downloadVibration"
 			android:title="@string/download_notification_vibrate"
-			android:defaultValue="true" />
+			android:defaultValue="false" />
 	    <RingtonePreference
 			android:key="downloadSound"
 			android:title="@string/download_notification_sound"
