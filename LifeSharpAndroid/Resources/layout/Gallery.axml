@@ -6,7 +6,7 @@
     android:minHeight="25px"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/linearLayout1">
+    android:id="@+id/galleryContainer">
     <android.support.v7.widget.Toolbar
         android:id="@+id/galleryToolbar"
         android:layout_width="match_parent"

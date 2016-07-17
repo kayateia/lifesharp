@@ -113,6 +113,7 @@
     <Compile Include="DownloadService.cs" />
     <Compile Include="ReceiveBoot.cs" />
     <Compile Include="ConfigureNotificationsActivity.cs" />
+    <Compile Include="UserGalleryActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -139,6 +140,7 @@
     <AndroidResource Include="Resources\xml\NotificationPreferences.xml" />
     <AndroidResource Include="Resources\layout\ConfigureNotifications.axml" />
     <AndroidResource Include="Resources\layout\GalleryCardView.axml" />
+    <AndroidResource Include="Resources\layout\GalleryImageTile.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Android.Support.Vector.Drawable.23.4.0.1\build\Xamarin.Android.Support.Vector.Drawable.targets" Condition="Exists('..\packages\Xamarin.Android.Support.Vector.Drawable.23.4.0.1\build\Xamarin.Android.Support.Vector.Drawable.targets')" />

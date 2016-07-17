@@ -204,6 +204,31 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 		});
 	}
 
+	public List<Image> getImagesByUser(string userLogin)
+	{
+		return performReadable("getImagesByUser", (db) =>
+		{
+			var images = new List<Image>();
+
+			using (ICursor cursor = db.Query(
+				TableName,
+				AllColumns,
+				"userLogin=?",
+				new String[]{ userLogin },
+				null,
+				null,
+				"rowid DESC"))
+			{
+				while (cursor.MoveToNext())
+				{
+					images.Add(GetImage(cursor));
+				}
+			}
+
+			return images;
+		});
+	}
+
 	public Image[] getItemsToUpload()
 	{
 		return performReadable("getItemsToUpload", (db) =>

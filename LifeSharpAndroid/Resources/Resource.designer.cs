@@ -1793,8 +1793,8 @@ namespace LifeSharp
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f0b006f
-			public const int action0 = 2131427439;
+			// aapt resource value: 0x7f0b0072
+			public const int action0 = 2131427442;
 			
 			// aapt resource value: 0x7f0b004a
 			public const int action_bar = 2131427402;
@@ -1820,8 +1820,8 @@ namespace LifeSharp
 			// aapt resource value: 0x7f0b004b
 			public const int action_context_bar = 2131427403;
 			
-			// aapt resource value: 0x7f0b0073
-			public const int action_divider = 2131427443;
+			// aapt resource value: 0x7f0b0076
+			public const int action_divider = 2131427446;
 			
 			// aapt resource value: 0x7f0b0003
 			public const int action_menu_divider = 2131427331;
@@ -1859,29 +1859,29 @@ namespace LifeSharp
 			// aapt resource value: 0x7f0b0022
 			public const int beginning = 2131427362;
 			
-			// aapt resource value: 0x7f0b006b
-			public const int buttonGallery = 2131427435;
-			
-			// aapt resource value: 0x7f0b006a
-			public const int buttonLogin = 2131427434;
-			
 			// aapt resource value: 0x7f0b006e
-			public const int buttonNotifications = 2131427438;
+			public const int buttonGallery = 2131427438;
+			
+			// aapt resource value: 0x7f0b006d
+			public const int buttonLogin = 2131427437;
+			
+			// aapt resource value: 0x7f0b0071
+			public const int buttonNotifications = 2131427441;
 			
 			// aapt resource value: 0x7f0b0034
 			public const int buttonPanel = 2131427380;
 			
-			// aapt resource value: 0x7f0b0070
-			public const int cancel_action = 2131427440;
+			// aapt resource value: 0x7f0b0073
+			public const int cancel_action = 2131427443;
 			
-			// aapt resource value: 0x7f0b0065
-			public const int checkEnable = 2131427429;
+			// aapt resource value: 0x7f0b0068
+			public const int checkEnable = 2131427432;
 			
 			// aapt resource value: 0x7f0b0042
 			public const int checkbox = 2131427394;
 			
-			// aapt resource value: 0x7f0b0076
-			public const int chronometer = 2131427446;
+			// aapt resource value: 0x7f0b0079
+			public const int chronometer = 2131427449;
 			
 			// aapt resource value: 0x7f0b0026
 			public const int collapseActionView = 2131427366;
@@ -1907,8 +1907,8 @@ namespace LifeSharp
 			// aapt resource value: 0x7f0b0048
 			public const int decor_content_parent = 2131427400;
 			
-			// aapt resource value: 0x7f0b006d
-			public const int defaultStream = 2131427437;
+			// aapt resource value: 0x7f0b0070
+			public const int defaultStream = 2131427440;
 			
 			// aapt resource value: 0x7f0b0030
 			public const int default_activity_button = 2131427376;
@@ -1916,11 +1916,11 @@ namespace LifeSharp
 			// aapt resource value: 0x7f0b0016
 			public const int disableHome = 2131427350;
 			
-			// aapt resource value: 0x7f0b0067
-			public const int editLogin = 2131427431;
+			// aapt resource value: 0x7f0b006a
+			public const int editLogin = 2131427434;
 			
-			// aapt resource value: 0x7f0b0069
-			public const int editPassword = 2131427433;
+			// aapt resource value: 0x7f0b006c
+			public const int editPassword = 2131427436;
 			
 			// aapt resource value: 0x7f0b004c
 			public const int edit_query = 2131427404;
@@ -1928,8 +1928,8 @@ namespace LifeSharp
 			// aapt resource value: 0x7f0b0023
 			public const int end = 2131427363;
 			
-			// aapt resource value: 0x7f0b007b
-			public const int end_padder = 2131427451;
+			// aapt resource value: 0x7f0b007e
+			public const int end_padder = 2131427454;
 			
 			// aapt resource value: 0x7f0b002e
 			public const int expand_activities_button = 2131427374;
@@ -1952,8 +1952,20 @@ namespace LifeSharp
 			// aapt resource value: 0x7f0b005e
 			public const int galleryCardView = 2131427422;
 			
+			// aapt resource value: 0x7f0b005b
+			public const int galleryContainer = 2131427419;
+			
 			// aapt resource value: 0x7f0b005d
 			public const int galleryRecyclerView = 2131427421;
+			
+			// aapt resource value: 0x7f0b0065
+			public const int galleryTileBadges = 2131427429;
+			
+			// aapt resource value: 0x7f0b0063
+			public const int galleryTileImage = 2131427427;
+			
+			// aapt resource value: 0x7f0b0064
+			public const int galleryTileTime = 2131427428;
 			
 			// aapt resource value: 0x7f0b005c
 			public const int galleryToolbar = 2131427420;
@@ -1976,29 +1988,26 @@ namespace LifeSharp
 			// aapt resource value: 0x7f0b002f
 			public const int image = 2131427375;
 			
-			// aapt resource value: 0x7f0b007a
-			public const int info = 2131427450;
+			// aapt resource value: 0x7f0b007d
+			public const int info = 2131427453;
 			
 			// aapt resource value: 0x7f0b0000
 			public const int item_touch_helper_previous_elevation = 2131427328;
 			
-			// aapt resource value: 0x7f0b0066
-			public const int labelForLogin = 2131427430;
+			// aapt resource value: 0x7f0b0069
+			public const int labelForLogin = 2131427433;
 			
-			// aapt resource value: 0x7f0b0068
-			public const int labelPassword = 2131427432;
+			// aapt resource value: 0x7f0b006b
+			public const int labelPassword = 2131427435;
 			
 			// aapt resource value: 0x7f0b000f
 			public const int light = 2131427343;
 			
-			// aapt resource value: 0x7f0b0074
-			public const int line1 = 2131427444;
+			// aapt resource value: 0x7f0b0077
+			public const int line1 = 2131427447;
 			
-			// aapt resource value: 0x7f0b0078
-			public const int line3 = 2131427448;
-			
-			// aapt resource value: 0x7f0b005b
-			public const int linearLayout1 = 2131427419;
+			// aapt resource value: 0x7f0b007b
+			public const int line3 = 2131427451;
 			
 			// aapt resource value: 0x7f0b0013
 			public const int listMode = 2131427347;
@@ -2006,14 +2015,14 @@ namespace LifeSharp
 			// aapt resource value: 0x7f0b0031
 			public const int list_item = 2131427377;
 			
-			// aapt resource value: 0x7f0b0064
-			public const int loginStatus = 2131427428;
+			// aapt resource value: 0x7f0b0067
+			public const int loginStatus = 2131427431;
 			
-			// aapt resource value: 0x7f0b0063
-			public const int mainToolbar = 2131427427;
+			// aapt resource value: 0x7f0b0066
+			public const int mainToolbar = 2131427430;
 			
-			// aapt resource value: 0x7f0b0072
-			public const int media_actions = 2131427442;
+			// aapt resource value: 0x7f0b0075
+			public const int media_actions = 2131427445;
 			
 			// aapt resource value: 0x7f0b0024
 			public const int middle = 2131427364;
@@ -2117,8 +2126,8 @@ namespace LifeSharp
 			// aapt resource value: 0x7f0b000b
 			public const int standard = 2131427339;
 			
-			// aapt resource value: 0x7f0b0071
-			public const int status_bar_latest_event_content = 2131427441;
+			// aapt resource value: 0x7f0b0074
+			public const int status_bar_latest_event_content = 2131427444;
 			
 			// aapt resource value: 0x7f0b0055
 			public const int submit_area = 2131427413;
@@ -2126,20 +2135,20 @@ namespace LifeSharp
 			// aapt resource value: 0x7f0b0015
 			public const int tabMode = 2131427349;
 			
-			// aapt resource value: 0x7f0b0079
-			public const int text = 2131427449;
+			// aapt resource value: 0x7f0b007c
+			public const int text = 2131427452;
 			
-			// aapt resource value: 0x7f0b0077
-			public const int text2 = 2131427447;
+			// aapt resource value: 0x7f0b007a
+			public const int text2 = 2131427450;
 			
 			// aapt resource value: 0x7f0b003d
 			public const int textSpacerNoButtons = 2131427389;
 			
-			// aapt resource value: 0x7f0b006c
-			public const int textView1 = 2131427436;
+			// aapt resource value: 0x7f0b006f
+			public const int textView1 = 2131427439;
 			
-			// aapt resource value: 0x7f0b0075
-			public const int time = 2131427445;
+			// aapt resource value: 0x7f0b0078
+			public const int time = 2131427448;
 			
 			// aapt resource value: 0x7f0b0033
 			public const int title = 2131427379;
@@ -2294,43 +2303,46 @@ namespace LifeSharp
 			public const int GalleryCardView = 2130903067;
 			
 			// aapt resource value: 0x7f03001c
-			public const int Main = 2130903068;
+			public const int GalleryImageTile = 2130903068;
 			
 			// aapt resource value: 0x7f03001d
-			public const int notification_media_action = 2130903069;
+			public const int Main = 2130903069;
 			
 			// aapt resource value: 0x7f03001e
-			public const int notification_media_cancel_action = 2130903070;
+			public const int notification_media_action = 2130903070;
 			
 			// aapt resource value: 0x7f03001f
-			public const int notification_template_big_media = 2130903071;
+			public const int notification_media_cancel_action = 2130903071;
 			
 			// aapt resource value: 0x7f030020
-			public const int notification_template_big_media_narrow = 2130903072;
+			public const int notification_template_big_media = 2130903072;
 			
 			// aapt resource value: 0x7f030021
-			public const int notification_template_lines = 2130903073;
+			public const int notification_template_big_media_narrow = 2130903073;
 			
 			// aapt resource value: 0x7f030022
-			public const int notification_template_media = 2130903074;
+			public const int notification_template_lines = 2130903074;
 			
 			// aapt resource value: 0x7f030023
-			public const int notification_template_part_chronometer = 2130903075;
+			public const int notification_template_media = 2130903075;
 			
 			// aapt resource value: 0x7f030024
-			public const int notification_template_part_time = 2130903076;
+			public const int notification_template_part_chronometer = 2130903076;
 			
 			// aapt resource value: 0x7f030025
-			public const int select_dialog_item_material = 2130903077;
+			public const int notification_template_part_time = 2130903077;
 			
 			// aapt resource value: 0x7f030026
-			public const int select_dialog_multichoice_material = 2130903078;
+			public const int select_dialog_item_material = 2130903078;
 			
 			// aapt resource value: 0x7f030027
-			public const int select_dialog_singlechoice_material = 2130903079;
+			public const int select_dialog_multichoice_material = 2130903079;
 			
 			// aapt resource value: 0x7f030028
-			public const int support_simple_spinner_dropdown_item = 2130903080;
+			public const int select_dialog_singlechoice_material = 2130903080;
+			
+			// aapt resource value: 0x7f030029
+			public const int support_simple_spinner_dropdown_item = 2130903081;
 			
 			static Layout()
 			{
@@ -2517,50 +2529,53 @@ namespace LifeSharp
 			// aapt resource value: 0x7f090035
 			public const int configure_notifications_activity_title = 2131296309;
 			
-			// aapt resource value: 0x7f090039
-			public const int download_notification_enable = 2131296313;
-			
-			// aapt resource value: 0x7f090038
-			public const int download_notification_settings = 2131296312;
-			
 			// aapt resource value: 0x7f09003a
-			public const int download_notification_sound = 2131296314;
+			public const int download_notification_enable = 2131296314;
+			
+			// aapt resource value: 0x7f090039
+			public const int download_notification_settings = 2131296313;
 			
 			// aapt resource value: 0x7f09003b
-			public const int download_notification_vibrate = 2131296315;
+			public const int download_notification_sound = 2131296315;
+			
+			// aapt resource value: 0x7f09003c
+			public const int download_notification_vibrate = 2131296316;
 			
 			// aapt resource value: 0x7f090036
 			public const int gallery_activity_title = 2131296310;
 			
-			// aapt resource value: 0x7f090037
-			public const int gallery_card_latestImage = 2131296311;
+			// aapt resource value: 0x7f090038
+			public const int gallery_card_latestImage = 2131296312;
 			
 			// aapt resource value: 0x7f090033
 			public const int library_name = 2131296307;
 			
-			// aapt resource value: 0x7f090040
-			public const int sound_default = 2131296320;
-			
 			// aapt resource value: 0x7f090041
-			public const int sound_none = 2131296321;
+			public const int sound_default = 2131296321;
 			
 			// aapt resource value: 0x7f090042
-			public const int sound_unknown = 2131296322;
+			public const int sound_none = 2131296322;
+			
+			// aapt resource value: 0x7f090043
+			public const int sound_unknown = 2131296323;
 			
 			// aapt resource value: 0x7f090032
 			public const int status_bar_notification_info_overflow = 2131296306;
 			
-			// aapt resource value: 0x7f09003d
-			public const int upload_notification_enable = 2131296317;
-			
-			// aapt resource value: 0x7f09003c
-			public const int upload_notification_settings = 2131296316;
-			
 			// aapt resource value: 0x7f09003e
-			public const int upload_notification_sound = 2131296318;
+			public const int upload_notification_enable = 2131296318;
+			
+			// aapt resource value: 0x7f09003d
+			public const int upload_notification_settings = 2131296317;
 			
 			// aapt resource value: 0x7f09003f
-			public const int upload_notification_vibrate = 2131296319;
+			public const int upload_notification_sound = 2131296319;
+			
+			// aapt resource value: 0x7f090040
+			public const int upload_notification_vibrate = 2131296320;
+			
+			// aapt resource value: 0x7f090037
+			public const int user_gallery_activity_title = 2131296311;
 			
 			static String()
 			{

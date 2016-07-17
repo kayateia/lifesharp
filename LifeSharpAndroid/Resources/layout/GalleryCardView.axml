@@ -17,18 +17,18 @@
         <ImageView
             android:id="@+id/galleryCardImageView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:maxHeight="@dimen/gallery_card_image_max_height"
             android:scaleType="centerCrop" />
         <TextView
             android:id="@+id/galleryCardUserLogin"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium" />
         <TextView
             android:id="@+id/galleryCardNumImages"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall" />
         <TextView
             android:id="@+id/galleryCardLatest"

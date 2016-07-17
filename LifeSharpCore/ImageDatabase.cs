@@ -45,6 +45,11 @@ public interface IImageDatabase
 	Image getImageByUserAndFileName(string userLogin, string filename);
 
 	/// <summary>
+	/// Returns a list of all downloaded images from the specified user.
+	/// </summary>
+	List<Image> getImagesByUser(string userLogin);
+
+	/// <summary>
 	/// Returns a set of image specs that need to be uploaded. They will not be
 	/// removed from the queue until markSent() has been called on each.
 	/// </summary>
