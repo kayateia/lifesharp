@@ -132,7 +132,14 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 				null, null, null, null))
 			{
 				if (cursor.MoveToFirst())
+				{
+					cursor.Close();
 					return;
+				}
+				else
+				{
+					cursor.Close();
+				}
 			}
 
 			// Go ahead and insert.
@@ -159,7 +166,14 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 				null, null, null, null))
 			{
 				if (cursor.MoveToFirst())
+				{
+					cursor.Close();
 					return;
+				}
+				else
+				{
+					cursor.Close();
+				}
 			}
 
 			// Go ahead and insert.
@@ -199,7 +213,9 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 				if (!cursor.MoveToFirst())
 					return null;
 
-				return GetImage(cursor);
+				var image = GetImage(cursor);
+				cursor.Close();
+				return image;
 			}
 		});
 	}
@@ -223,6 +239,8 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 				{
 					images.Add(GetImage(cursor));
 				}
+
+				cursor.Close();
 			}
 
 			return images;
@@ -250,6 +268,7 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 					cursor.MoveToNext();
 				}
 
+				cursor.Close();
 				return rv;
 			}
 		});
@@ -367,6 +386,8 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 					user.userLogin = cursor.GetString(1);
 					user.numImages = cursor.GetInt(2);
 				}
+
+				cursor.Close();
 			}
 
 			return user;
@@ -395,6 +416,8 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 				{
 					users.Add(getUserSummary(cursor.GetString(0)));
 				}
+
+				cursor.Close();
 			}
 
 			return users;

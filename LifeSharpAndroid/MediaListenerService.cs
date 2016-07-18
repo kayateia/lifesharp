@@ -75,6 +75,8 @@ public class PhotoMediaObserver : ContentObserver
 					anyNew = true;
 				}
 			}
+
+			cursor.Close();
 		}
 
 		// Update?
