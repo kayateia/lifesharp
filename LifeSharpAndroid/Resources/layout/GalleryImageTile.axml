@@ -3,7 +3,8 @@
     xmlns:lifesharp="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="@dimen/gallery_image_tile_padding">
     <lifesharp.DynamicImageView
         android:id="@+id/galleryTileImage"
         android:layout_width="fill_parent"
@@ -14,6 +15,7 @@
         android:id="@+id/galleryTileTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/galleryTileText"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_alignBottom="@id/galleryTileImage"
         android:layout_alignLeft="@id/galleryTileImage" />
@@ -21,7 +23,7 @@
         android:id="@+id/galleryTileBadges"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
+        style="@style/galleryTileText"
         android:layout_alignBottom="@id/galleryTileTime"
         android:layout_alignLeft="@id/galleryTileImage" />
 </RelativeLayout>

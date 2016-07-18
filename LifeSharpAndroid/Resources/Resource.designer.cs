@@ -1350,6 +1350,9 @@ namespace LifeSharp
 			// aapt resource value: 0x7f070053
 			public const int gallery_card_image_max_height = 2131165267;
 			
+			// aapt resource value: 0x7f070054
+			public const int gallery_image_tile_padding = 2131165268;
+			
 			// aapt resource value: 0x7f07004b
 			public const int highlight_alpha_material_colored = 2131165259;
 			
@@ -1368,8 +1371,8 @@ namespace LifeSharp
 			// aapt resource value: 0x7f070005
 			public const int item_touch_helper_swipe_escape_velocity = 2131165189;
 			
-			// aapt resource value: 0x7f070054
-			public const int list_item_height = 2131165268;
+			// aapt resource value: 0x7f070055
+			public const int list_item_height = 2131165269;
 			
 			// aapt resource value: 0x7f07004e
 			public const int notification_large_icon_height = 2131165262;
@@ -1380,32 +1383,32 @@ namespace LifeSharp
 			// aapt resource value: 0x7f070050
 			public const int notification_subtext_size = 2131165264;
 			
-			// aapt resource value: 0x7f070055
-			public const int subtitle_height = 2131165269;
-			
 			// aapt resource value: 0x7f070056
-			public const int subtitle_text_size = 2131165270;
+			public const int subtitle_height = 2131165270;
 			
 			// aapt resource value: 0x7f070057
-			public const int switch_elevation = 2131165271;
+			public const int subtitle_text_size = 2131165271;
 			
 			// aapt resource value: 0x7f070058
-			public const int title_height = 2131165272;
+			public const int switch_elevation = 2131165272;
 			
 			// aapt resource value: 0x7f070059
-			public const int toolbar_height = 2131165273;
-			
-			// aapt resource value: 0x7f07005c
-			public const int view_padding_bottom = 2131165276;
-			
-			// aapt resource value: 0x7f07005d
-			public const int view_padding_left = 2131165277;
-			
-			// aapt resource value: 0x7f07005b
-			public const int view_padding_right = 2131165275;
+			public const int title_height = 2131165273;
 			
 			// aapt resource value: 0x7f07005a
-			public const int view_padding_top = 2131165274;
+			public const int toolbar_height = 2131165274;
+			
+			// aapt resource value: 0x7f07005d
+			public const int view_padding_bottom = 2131165277;
+			
+			// aapt resource value: 0x7f07005e
+			public const int view_padding_left = 2131165278;
+			
+			// aapt resource value: 0x7f07005c
+			public const int view_padding_right = 2131165276;
+			
+			// aapt resource value: 0x7f07005b
+			public const int view_padding_top = 2131165275;
 			
 			static Dimension()
 			{
@@ -3552,6 +3555,9 @@ namespace LifeSharp
 			
 			// aapt resource value: 0x7f08013d
 			public const int Widget_AppCompat_Toolbar_Button_Navigation = 2131231037;
+			
+			// aapt resource value: 0x7f080140
+			public const int galleryTileText = 2131231040;
 			
 			static Style()
 			{

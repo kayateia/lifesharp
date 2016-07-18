@@ -65,7 +65,7 @@ public class GalleryAdapter : RecyclerView.Adapter
 				new Java.Lang.Object[]{ userSummary.numImages });
 			userLoginView.Text = userSummary.userLogin;
 			latestTimeView.Text = _context.GetString(Resource.String.gallery_card_latestImage)
-				+ " " + userSummary.lastImage.queueStamp.ToLocalTime();
+				+ " " + userSummary.lastImage.queueStamp.ToLocalTime().ToString("G");
 		}
 	}
 
