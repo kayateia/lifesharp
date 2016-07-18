@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:lifesharp="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content">
-    <ImageView
+    <lifesharp.DynamicImageView
         android:id="@+id/galleryTileImage"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        lifesharp:squareImage="true" />
     <TextView
         android:id="@+id/galleryTileTime"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_alignBottom="@id/galleryTileImage"
         android:layout_alignLeft="@id/galleryTileImage" />
     <TextView
         android:id="@+id/galleryTileBadges"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_alignBottom="@id/galleryTileTime"

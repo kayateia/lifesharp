@@ -1,6 +1,6 @@
 ﻿/*
 	LifeStream - Instant Photo Sharing
-	Copyright (C) 2016 Dove
+	Copyright (C) 2016 Dove and Deciare
 
 	This code is licensed under the GPL v3 or later.
 	Please see the file LICENSE for more info.

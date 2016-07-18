@@ -23,7 +23,6 @@ public class UserGalleryAdapter : RecyclerView.Adapter
 
 	public class ViewHolder : RecyclerView.ViewHolder
 	{
-		Context _context;
 		public Image image { get; private set; }
 		public ImageView imageView { get; private set; }
 		public TextView badgesView { get; private set; }
@@ -31,8 +30,6 @@ public class UserGalleryAdapter : RecyclerView.Adapter
 
 		public ViewHolder(Context context, RelativeLayout itemView, EventHandler<int> onClick) : base(itemView)
 		{
-			_context = context;
-
 			// Clicking on the item view triggers the adapter's Click event.
 			itemView.Click += delegate {
 				onClick(this, image.id);

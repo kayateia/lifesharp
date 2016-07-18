@@ -2,7 +2,7 @@
 <resources>
 	<dimen name="adjacent_content_margin">8dp</dimen>
 	<dimen name="card_view_padding">8dp</dimen>
-	<dimen name="gallery_card_image_max_height">200dp</dimen>
+	<dimen name="gallery_card_image_max_height">240dp</dimen>
 	<dimen name="list_item_height">72dp</dimen>
 	<dimen name="subtitle_height">48dp</dimen>
 	<dimen name="subtitle_text_size">16sp</dimen>

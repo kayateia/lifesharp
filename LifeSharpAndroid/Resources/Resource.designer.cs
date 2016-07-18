@@ -621,6 +621,9 @@ namespace LifeSharp
 			// aapt resource value: 0x7f0100d0
 			public const int splitTrack = 2130772176;
 			
+			// aapt resource value: 0x7f0100e6
+			public const int squareImage = 2130772198;
+			
 			// aapt resource value: 0x7f010039
 			public const int srcCompat = 2130772025;
 			
