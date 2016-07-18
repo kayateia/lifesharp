@@ -55,7 +55,7 @@ public class UserGalleryAdapter : RecyclerView.Adapter
 
 			// Update views based on image
 			imageView.SetImageURI(Uri.Parse(image.sourcePath));
-			badgesView.Text = image.comment.IsNullOrEmpty() ? "" : "\u1f4ac";
+			badgesView.Text = image.comment.IsNullOrEmpty() ? "" : "💬";
 			timeView.Text = image.queueStamp.ToLocalTime().ToString("G");
 		}
 	}
