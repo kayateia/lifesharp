@@ -89,7 +89,6 @@
     <Compile Include="Settings.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="LifeSharpService.cs" />
-    <Compile Include="Utils.cs" />
     <Compile Include="GalleryActivity.cs" />
     <Compile Include="Notifications.cs" />
     <Compile Include="MediaScannerWrapper.cs" />
@@ -115,6 +114,7 @@
     <Compile Include="ConfigureNotificationsActivity.cs" />
     <Compile Include="UserGalleryActivity.cs" />
     <Compile Include="DynamicImageView.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

@@ -20,9 +20,46 @@ public class Basic
 			this.error = GetError(source);
 	}
 
+	/// <summary>
+	/// Checks JSON response from server to see whether request was successful.
+	/// </summary>
+	/// <param name="source">JSON response from server.</param>
 	static public bool Succeeded(JsonValue source)
 	{
 		return (bool)source["success"] == true;
+	}
+
+	/// <summary>
+	/// Checks JSON response from server to see whether request was successful.
+	/// If request succeeded, also check to see whether an ID was included in
+	/// the response.
+	/// </summary>
+	/// <returns>
+	/// If the request was successful and an ID was included in the response, return the ID.
+	/// If the request was successful but no ID was included in the response, return 0.
+	/// If the request was not successful, return -1.
+	/// </returns>
+	/// <param name="source">Source.</param>
+	static public int SucceededWithId(JsonValue source)
+	{
+		if ((bool)source["success"] == true)
+		{
+			if (source.ContainsKey("id"))
+			{
+				// Request succeeded, and ID property was in response
+				return (int)source["id"];
+			}
+			else
+			{
+				// Request succeeded, but ID property was not in response
+				return 0;
+			}
+		}
+		else
+		{
+			// Request failed
+			return -1;
+		}
 	}
 
 	static public string GetError(JsonValue source)
@@ -57,9 +94,11 @@ public class StreamContents : Basic
 			{
 				this.images[i] = new Image()
 				{
-					id = (int)imgsrc[i]["id"],
+					imageid = (int)imgsrc[i]["id"],
+					userid = (int)imgsrc[i]["userid"],
 					filename = (string)imgsrc[i]["filename"],
 					userLogin = (string)imgsrc[i]["userLogin"],
+					userName = (string)imgsrc[i]["userName"],
 					uploadTime = Utils.UnixToDateTime((int)imgsrc[i]["uploadTime"]),
 					comment = (string)imgsrc[i]["comment"]
 				};
@@ -71,9 +110,11 @@ public class StreamContents : Basic
 
 	public class Image
 	{
-		public int id;
+		public int imageid;
+		public int userid;
 		public string filename;
 		public string userLogin;
+		public string userName;
 		public DateTimeOffset uploadTime;
 		public string comment;
 	}

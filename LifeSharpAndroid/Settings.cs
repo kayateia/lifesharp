@@ -27,9 +27,9 @@ public class Settings
 		public const string UserId = "userid";
 		public const string Pass = "password";
 		public const string Auth = "authToken";
-		public const string LastCheck = "lastCheck";
 		public const string Enabled = "enabled";
-		public const string LastImageTimestamp = "lastImageTimestamp";
+		public const string LastUploadedImageTimestamp = "lastUploadedImageTimestamp";
+		public const string LastDownloadedImageId = "lastDownloadedImageId";
 		public const string GcmId = "gcmid";
 		public const string DefaultStream = "defaultStream";
 		public const string DownloadNotifications = "downloadNotifications";
@@ -196,29 +196,29 @@ public class Settings
 
 	static readonly DateTimeOffset Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-	public DateTimeOffset lastCheck
+	public long lastUploadedImageTimestamp
 	{
 		get
 		{
-			return Epoch.AddSeconds(getLong(Prefs.LastCheck, 0));
+			return getLong(Prefs.LastUploadedImageTimestamp, (long)((DateTimeOffset.UtcNow.Subtract(new TimeSpan(0, 0, DefaultDuration)) - Epoch).TotalSeconds));
 		}
 
 		set
 		{
-			setLong(Prefs.LastCheck, (long)((value - Epoch).TotalSeconds));
+			setLong(Prefs.LastUploadedImageTimestamp, value);
 		}
 	}
 
-	public long lastImageProcessedTimestamp
+	public long lastDownloadedImageId
 	{
 		get
-		{	
-			return getLong(Prefs.LastImageTimestamp, (long)((DateTimeOffset.UtcNow.Subtract(new TimeSpan(0, 0, DefaultDuration)) - Epoch).TotalSeconds));
+		{
+			return getLong(Prefs.LastDownloadedImageId, 0);
 		}
 
 		set
 		{
-			setLong(Prefs.LastImageTimestamp, value);
+			setLong(Prefs.LastDownloadedImageId, value);
 		}
 	}
 

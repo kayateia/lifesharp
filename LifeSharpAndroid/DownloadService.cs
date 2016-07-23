@@ -84,12 +84,6 @@ public class DownloadService : ILifeSharpService
 
 		Log.Info(LogTag, "Doing new files check on server");
 
-		// We pull the new check time up front because our snapshot of what images are available to
-		// stream will be based on right now.
-		//
-		// FIXME: This isn't actually used right now; the REST call always pull the top 50.
-		DateTimeOffset newCheckTime = DateTimeOffset.UtcNow;
-
 		// Get a list of the user's subscribed streams. These are the ones we'll poll for new images.
 		var subInfo = await Network.GetSubscriptionInfo(settings.authToken, (int)settings.userId);
 		if (!subInfo.succeeded())
@@ -98,7 +92,10 @@ public class DownloadService : ILifeSharpService
 		string subList = String.Join(",", subInfo.subscriptions.Select(s => s.id.ToString()));
 
 		// Call to the server to get our list of images to pull.
-		var json = await Network.HttpGetToJsonAsync(Settings.BaseUrl + "api/stream/" + subList + "/contents", settings.authToken);
+		var json = await Network.HttpGetToJsonAsync(Settings.BaseUrl + "api/stream/" + subList + "/contents"
+			+ "?newerThanId=" + settings.lastDownloadedImageId
+			+ "&count=100",
+			settings.authToken);
 		var model = new Protocol.StreamContents(json);
 		if (model.error != null)
 		{
@@ -145,7 +142,7 @@ public class DownloadService : ILifeSharpService
 			};
 
 			IImageDatabase db = ImageDatabaseAndroid.GetSingleton(context);
-
+			int lastImageId = 0;
 			foreach (var img in model.images)
 			{
 				// If it's our image, don't download it.
@@ -178,18 +175,21 @@ public class DownloadService : ILifeSharpService
 				}
 				else
 				{
-					Log.Info(LogTag, String.Format("Download image {0}/{1} to {2}", img.id, img.filename, imgpath));
+					Log.Info(LogTag, String.Format("Download image {0}/{1} to {2}", img.imageid, img.filename, imgpath));
 
-					await Network.HttpDownloadAsync(Settings.BaseUrl + "api/image/" + img.id, settings.authToken, imgpath);
+					await Network.HttpDownloadAsync(Settings.BaseUrl + "api/image/" + img.imageid, settings.authToken, imgpath);
 				}
 
-				db.addDownloadedFile(imgpath, img.filename, img.userLogin, img.uploadTime, img.comment);
+				db.addDownloadedFile(imgpath, img.filename, img.imageid, img.userid, img.userLogin, img.userName, img.uploadTime, img.comment);
 				scanner.addFile(imgpath, img);
+
+				if (img.imageid > lastImageId)
+					lastImageId = img.imageid;
 			}
 
 			scanner.scan();
 
-			settings.lastCheck = newCheckTime;
+			settings.lastDownloadedImageId = lastImageId;
 			settings.commit();
 		}
 

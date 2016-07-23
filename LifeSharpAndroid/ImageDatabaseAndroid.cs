@@ -31,10 +31,14 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 	const string ImageDatabaseName = "LifeSharpImageDatabase";
 	const string TableName = "images";
 
+	                                     // "rowid" column is implicit client-side image ID
+	const string KeyImageId = "imageid"; // "imageid" column is server-side image ID
 	const string KeyState = "state";
 	const string KeyFilename = "filename";
 	const string KeySourcePath = "sourcepath";
+	const string KeyUserId = "userid";
 	const string KeyUserLogin = "userlogin";
+	const string KeyUserName = "username";
 	const string KeyQueuestamp = "queuestamp";
 	const string KeySendTimeout = "sendtimeout";
 	const string KeyComment = "sendcomment";
@@ -60,10 +64,13 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 	public override void OnCreate(SQLiteDatabase db)
 	{
 		string createdProcessedTable = "create table " + TableName + "("
+			+ KeyImageId + " integer,"
 			+ KeyState + " integer,"
-			+ KeyFilename + " filename,"
-			+ KeySourcePath + " sourcepath,"
-			+ KeyUserLogin + " userlogin,"
+			+ KeyFilename + " string,"
+			+ KeySourcePath + " string,"
+			+ KeyUserId + " integer,"
+			+ KeyUserLogin + " string,"
+			+ KeyUserName + " string,"
 			+ KeyQueuestamp + " integer,"
 			+ KeySendTimeout + " integer,"
 			+ KeyComment + " string"
@@ -154,7 +161,7 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 		});
 	}
 
-	public void addDownloadedFile(string fullDownloadedPath, string filename, string userLogin, DateTimeOffset fileTime, string comment)
+	public void addDownloadedFile(string fullDownloadedPath, string filename, int imageid, int userid, string userLogin, string userName, DateTimeOffset fileTime, string comment)
 	{
 		performWritable("addDownloadedFile", (db) =>
 		{
@@ -181,7 +188,10 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 			values.Put(KeyState, (int)Image.State.Downloaded);
 			values.Put(KeyFilename, filename);
 			values.Put(KeySourcePath, fullDownloadedPath);
+			values.Put(KeyImageId, imageid);
+			values.Put(KeyUserId, userid);
 			values.Put(KeyUserLogin, userLogin);
+			values.Put(KeyUserName, userName);
 			values.Put(KeyQueuestamp, Utils.DateTimeToUnix(fileTime));
 			values.Put(KeySendTimeout, 0);
 			values.Put(KeyComment, comment);
@@ -233,7 +243,7 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 				new String[]{ userLogin },
 				null,
 				null,
-				"rowid DESC"))
+				KeyImageId + " DESC"))
 			{
 				while (cursor.MoveToNext())
 				{
@@ -278,7 +288,7 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 	{
 		get
 		{
-			return new String[] { "rowid", KeyState, KeyFilename, KeySourcePath, KeyQueuestamp, KeySendTimeout, KeyComment };
+			return new String[] { KeyImageId, KeyState, KeyFilename, KeySourcePath, KeyQueuestamp, KeySendTimeout, KeyComment, KeyUserId, KeyUserLogin, KeyUserName };
 		}
 	}
 
@@ -298,7 +308,7 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 
 	static Image GetOneImage(SQLiteDatabase db, int id)
 	{
-		using (ICursor cursor = db.Query(TableName, AllColumns, "rowid=?", new string[] { id.ToString() }, null, null, null ))
+		using (ICursor cursor = db.Query(TableName, AllColumns, KeyImageId + "=?", new string[] { id.ToString() }, null, null, null ))
 		{
 			if (!cursor.MoveToFirst())
 				return null;
@@ -317,7 +327,7 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 
 			// Delete the database row.
 			db.Delete(TableName,
-				"rowid=?",
+				KeyImageId + "=?",
 				new string[] { id.ToString() });
 
 			// Delete any external storage associated with it.
@@ -327,6 +337,10 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 		});
 	}
 
+	/// <summary>
+	/// Marks an image matching the given client-side ID as having been sent
+	/// </summary>
+	/// <param name="id">Client-side image ID</param>
 	public void markSent(int id)
 	{
 		performWritable("markSent", (db) =>
@@ -360,7 +374,7 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 			ContentValues values = new ContentValues();
 			values.Put(KeyState, (int)newState);
 			values.Put(KeyComment, comment);
-			db.Update(TableName, values, "rowid=?", new string[] { id.ToString() });
+			db.Update(TableName, values, KeyImageId + "=?", new string[] { id.ToString() });
 		});
 	}
 
@@ -372,12 +386,12 @@ public class ImageDatabaseAndroid : SQLiteOpenHelper, IImageDatabase
 
 			using (ICursor cursor = db.Query(
 				TableName,
-				new string[] { "rowid", KeyUserLogin, "COUNT(*) AS numImages" },
+				new string[] { KeyImageId, KeyUserLogin, "COUNT(*) AS numImages" },
 				KeyUserLogin + "=?",
 				new string[] { userLogin },
 				KeyUserLogin,
 				null,
-				"rowid DESC"))
+				KeyImageId + " DESC"))
 			{
 				if (cursor.MoveToFirst())
 				{

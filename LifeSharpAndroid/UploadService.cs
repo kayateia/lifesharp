@@ -68,9 +68,18 @@ public class UploadService : ILifeSharpService
 			string destfn = GetThumbnailPath(context, i);
 			if (!File.Exists(destfn))
 				scaleImage(i.sourcePath, destfn);
-			if (uploadImage(i, destfn, settings.authToken, (int)settings.defaultStream).Result) {
+
+			// Upload the image and save the image ID returned from the server
+			var newId = uploadImage(i, destfn, settings.authToken, (int)settings.defaultStream).Result;
+			// ID -1 comes from Protocol, and indicates the request failed
+			if (newId > -1)
+			{
+				// ID 0 comes from Protocol, and indicates the the request failed because an image with
+				// the same filename was already present on the server.
 				db.markSent(i.id);
-				if (settings.uploadNotifications) {
+				// ID > 0 comes from the server, and indicates the server-side ID of the newly-uploaded image.
+				if (newId > 0 && settings.uploadNotifications)
+				{
 					Notifications.NotifyUpload(context, 200, true, "Uploaded image", "Uploaded image", "", i.sourcePath, destfn);
 				}
 			}
@@ -105,7 +114,7 @@ public class UploadService : ILifeSharpService
 				break;
 		}
 
-		// Make this configurable again later.
+		// TODO: Make this configurable again later.
 		const int largestSize = 800;
 
 		// Figure out the target size;
@@ -157,7 +166,19 @@ public class UploadService : ILifeSharpService
 		return p;
 	}
 
-	async Task<bool> uploadImage(Image image, string thumbPath, string authToken, int streamId)
+	/// <summary>
+	/// Uploads an image to the server.
+	/// </summary>
+	/// <returns>
+	/// If upload was successful, return the server-side image ID of the uploaded image.
+	/// If upload failed because the image already existed server-side, return 0.
+	/// If upload failed for any other reason, return -1.
+	/// </returns>
+	/// <param name="image">Image.</param>
+	/// <param name="thumbPath">Thumb path.</param>
+	/// <param name="authToken">Auth token.</param>
+	/// <param name="streamId">Stream identifier.</param>
+	async Task<int> uploadImage(Image image, string thumbPath, string authToken, int streamId)
 	{
 		Log.Info(LogTag, "Uploading image {0}", thumbPath);
 		try
@@ -168,18 +189,16 @@ public class UploadService : ILifeSharpService
 				},
 				"image", thumbPath);
 
-			if (Protocol.Basic.Succeeded(response))
-				return true;
-			else
-			{
+			var newId = Protocol.Basic.SucceededWithId(response);
+			if (newId == -1)
 				Log.Error(LogTag, "Can't upload image {0}: {1}", image.filename, response);
-				return false;
-			}
+
+			return newId;
 		}
 		catch (Exception e)
 		{
 			Log.Error(LogTag, "Exception: {0}", e);
-			return false;
+			return -1;
 		}
 	}
 }

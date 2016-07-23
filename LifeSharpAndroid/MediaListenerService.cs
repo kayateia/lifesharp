@@ -31,7 +31,7 @@ public class PhotoMediaObserver : ContentObserver
 	public override void OnChange(bool selfChange)
 	{
 		// var newMedia = new List<Media>();
-		long lastImageTimestamp = _settings.lastImageProcessedTimestamp;
+		long lastImageTimestamp = _settings.lastUploadedImageTimestamp;
 		long newLastTimestamp = -1;
 		bool anyNew = false;
 
@@ -57,7 +57,7 @@ public class PhotoMediaObserver : ContentObserver
 			while (cursor.MoveToNext())
 			{
 				if (cursor.IsNull(dataColumn)) {
-					Console.WriteLine("PhotoMediaObserver.OnChange(): filePath is null, which indicates this row is invalid (deleted?). Skip this file.");
+					Log.Info(LogTag, "PhotoMediaObserver.OnChange(): filePath is null, which indicates this row is invalid (deleted?). Skip this file.");
 					continue;
 				}
 				string filePath = cursor.GetString(dataColumn);
@@ -82,7 +82,7 @@ public class PhotoMediaObserver : ContentObserver
 		// Update?
 		if (newLastTimestamp > lastImageTimestamp)
 		{
-			_settings.lastImageProcessedTimestamp = newLastTimestamp;
+			_settings.lastUploadedImageTimestamp = newLastTimestamp;
 			_settings.commit();
 		}
 

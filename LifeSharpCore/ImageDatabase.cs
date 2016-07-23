@@ -24,7 +24,7 @@ public interface IImageDatabase
 	/// Adds a newly downloaded image to the 
 	/// </summary>
 	/// <param name="image">Image.</param>
-	void addDownloadedFile(string fullDownloadedPath, string filename, string userLogin, DateTimeOffset fileTime, string comment);
+	void addDownloadedFile(string fullDownloadedPath, string filename, int imageid, int userid, string userLogin, string userName, DateTimeOffset fileTime, string comment);
 
 	/// <summary>
 	/// Return a full path (whose parent dirs will exist on disk) for a scaled image. Note
@@ -111,9 +111,14 @@ public class Image
 	}
 
 	/// <summary>
-	/// Database ID of the image
+	/// Client-side database ID of the image
 	/// </summary>
 	public int id { get; set; }
+
+	/// <summary>
+	/// Server-side ID of the image
+	/// </summary>
+	public int imageid { get; set; }
 
 	/// <summary>
 	/// State of the image (and type)
@@ -132,9 +137,19 @@ public class Image
 	public string sourcePath { get; set; }
 
 	/// <summary>
+	/// For downloaded images, the server-side user ID of the poster.
+	/// </summary>
+	public int userid { get; set; }
+
+	/// <summary>
 	/// For downloaded images, the login of the user who posted it.
 	/// </summary>
 	public string userLogin { get; set; }
+
+	/// <summary>
+	/// For downloaded images, the display name of the user who posted it.
+	/// </summary>
+	public string userName { get; set; }
 
 	/// <summary>
 	/// Timestamp for when the item was placed in the queue (or downloaded)
