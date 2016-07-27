@@ -11,16 +11,13 @@ using System.Collections.Generic;
 
 using Android.App;
 using Android.Content;
-using Android.Graphics;
 using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 
 using Android.Support.V7.App;
 using Android.Support.V7.Widget;
 
-using Uri = Android.Net.Uri;
 using Toolbar = Android.Support.V7.Widget.Toolbar;
 
 namespace LifeSharp
@@ -46,10 +43,10 @@ public class GalleryAdapter : RecyclerGalleryView.Adapter
 			};
 
 			// Attach member variables to child views of this item view.
-			imageView = itemView.FindViewById<ImageView>(Resource.Id.galleryCardImageView);
-			userLoginView = itemView.FindViewById<TextView>(Resource.Id.galleryCardUserLogin);
-			numImagesView = itemView.FindViewById<TextView>(Resource.Id.galleryCardNumImages);
-			latestTimeView = itemView.FindViewById<TextView>(Resource.Id.galleryCardLatest);
+			this.imageView = itemView.FindViewById<ImageView>(Resource.Id.galleryCardImageView);
+			this.userLoginView = itemView.FindViewById<TextView>(Resource.Id.galleryCardUserLogin);
+			this.numImagesView = itemView.FindViewById<TextView>(Resource.Id.galleryCardNumImages);
+			this.latestTimeView = itemView.FindViewById<TextView>(Resource.Id.galleryCardLatest);
 		}
 
 		public void SetUser(UserSummary userSummary)
@@ -59,11 +56,11 @@ public class GalleryAdapter : RecyclerGalleryView.Adapter
 
 			// Additional things to be done for this class.
 			this.userSummary = userSummary;
-			numImagesView.Text = activity.Resources.GetQuantityString(
+			this.numImagesView.Text = this.activity.Resources.GetQuantityString(
 				Resource.Plurals.gallery_card_numImages, userSummary.numImages,
 				new Java.Lang.Object[]{ userSummary.numImages });
-			userLoginView.Text = userSummary.userLogin;
-			latestTimeView.Text = activity.GetString(Resource.String.gallery_card_latestImage)
+			this.userLoginView.Text = userSummary.userLogin;
+			this.latestTimeView.Text = this.activity.GetString(Resource.String.gallery_card_latestImage)
 				+ " " + userSummary.lastImage.queueStamp.ToLocalTime().ToString("G");
 		}
 	}
@@ -77,8 +74,8 @@ public class GalleryAdapter : RecyclerGalleryView.Adapter
 	public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
 	{
 		var view = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.GalleryCardView, parent, false);
-		var viewHolder = new ViewHolder(activity, (CardView)view, screenWidth, Click);
-		viewHolders.Add(viewHolder);
+		var viewHolder = new ViewHolder(this.activity, (CardView)view, this.screenWidth, Click);
+		this.viewHolders.Add(viewHolder);
 		return viewHolder;
 	}
 

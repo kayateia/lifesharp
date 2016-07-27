@@ -1,6 +1,6 @@
 ﻿/*
 	LifeStream - Instant Photo Sharing
-	Copyright (C) 2014-2016 Deciare
+	Copyright (C) 2016 Deciare
 
 	This code is licensed under the GPL v3 or later.
 	Please see the file LICENSE for more info.

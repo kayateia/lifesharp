@@ -1,4 +1,11 @@
-﻿using System;
+﻿/*
+	LifeStream - Instant Photo Sharing
+	Copyright (C) 2016 Deciare
+
+	This code is licensed under the GPL v3 or later.
+	Please see the file LICENSE for more info.
+*/
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -25,10 +32,10 @@ public class RecyclerGalleryView
 		protected int screenWidth;
 		protected List<ViewHolder> viewHolders;
 
-		public Adapter(Activity activity)
+		protected Adapter(Activity activity)
 		{
 			this.activity = activity;
-			viewHolders = new List<ViewHolder>();
+			this.viewHolders = new List<ViewHolder>();
 
 			// The target width of each displayed image shoud be proportional to
 			// a given percentage of the screen size.
@@ -36,19 +43,19 @@ public class RecyclerGalleryView
 			Display display = wm.DefaultDisplay;
 			Point size = new Point();
 			display.GetSize(size);
-			screenWidth = size.X;
+			this.screenWidth = size.X;
 		}
 
 		public void FreeAllBitmaps()
 		{
-			if (viewHolders.Count == 0)
+			if (this.viewHolders.Count == 0)
 			{
 				Log.Warn(LogTag, "viewHolders list is empty. Is OnCreateViewHolder() appending to the list?");
 			}
 
 			// Iterate through all ViewHolders created by this adapter, and free the
 			// bitmap that was allocated by each.
-			foreach (ViewHolder holder in viewHolders)
+			foreach (ViewHolder holder in this.viewHolders)
 			{
 				holder.FreePreviousBitmap();
 			}
@@ -100,21 +107,21 @@ public class RecyclerGalleryView
 			Bitmap bitmap = BitmapFactory.DecodeFile(image.sourcePath, options);
 
 			// Save a reference to the bitmap so it can be manually recycled later.
-			bitmapReference = new WeakReference<Bitmap>(bitmap);
+			this.bitmapReference = new WeakReference<Bitmap>(bitmap);
 
 			return bitmap;
 		}
 
 		public void FreePreviousBitmap()
 		{
-			Debug.Assert(imageView != null, "imageView must be set by subclass constructor");
+			Debug.Assert(this.imageView != null, "imageView must be set by subclass constructor");
 
 			// If a bitmap was previously allocated for this view holder, free
 			// the memory that was used by that bitmap.
 			Bitmap bitmap;
-			if (bitmapReference != null && bitmapReference.TryGetTarget(out bitmap))
+			if (this.bitmapReference != null && this.bitmapReference.TryGetTarget(out bitmap))
 			{
-				imageView.SetImageBitmap(null);
+				this.imageView.SetImageBitmap(null);
 				try
 				{
 					bitmap.Recycle();
@@ -144,7 +151,7 @@ public class RecyclerGalleryView
 
 				// Once the bitmap decode is complete, assign it to the ImageView.
 				// This must be done on the UI thread.
-				activity.RunOnUiThread(delegate {
+				this.activity.RunOnUiThread(delegate {
 					// When scrolling rapidly, it's possible that the bitmap has
 					// already been recycled by a subsequent call to
 					// SetImageViewTarget() before we get around to displaying
@@ -152,7 +159,7 @@ public class RecyclerGalleryView
 					if (bitmap != null && !bitmap.IsRecycled)
 					{
 						// Update views based on image properties.
-						imageView.SetImageBitmap(bitmap);
+						this.imageView.SetImageBitmap(bitmap);
 					}
 				});
 			});

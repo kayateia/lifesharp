@@ -1,6 +1,6 @@
 ﻿/*
 	LifeStream - Instant Photo Sharing
-	Copyright (C) 2014-2016 Deciare
+	Copyright (C) 2016 Deciare
 
 	This code is licensed under the GPL v3 or later.
 	Please see the file LICENSE for more info.
@@ -42,9 +42,9 @@ public class UserGalleryAdapter : RecyclerGalleryView.Adapter
 			};
 
 			// Attach member variables to child views of this item view.
-			imageView = itemView.FindViewById<ImageView>(Resource.Id.galleryTileImage);
-			badgesView = itemView.FindViewById<TextView>(Resource.Id.galleryTileBadges);
-			timeView = itemView.FindViewById<TextView>(Resource.Id.galleryTileTime);
+			this.imageView = itemView.FindViewById<ImageView>(Resource.Id.galleryTileImage);
+			this.badgesView = itemView.FindViewById<TextView>(Resource.Id.galleryTileBadges);
+			this.timeView = itemView.FindViewById<TextView>(Resource.Id.galleryTileTime);
 		}
 
 		public void SetImage(Image image)
@@ -54,8 +54,8 @@ public class UserGalleryAdapter : RecyclerGalleryView.Adapter
 
 			// Additional things to be done for this class.
 			this.image = image;
-			badgesView.Text = image.comment.IsNullOrEmpty() ? "" : "💬";
-			timeView.Text = image.queueStamp.ToLocalTime().ToString("G");
+			this.badgesView.Text = image.comment.IsNullOrEmpty() ? "" : "💬";
+			this.timeView.Text = image.queueStamp.ToLocalTime().ToString("G");
 		}
 	}
 
@@ -73,8 +73,8 @@ public class UserGalleryAdapter : RecyclerGalleryView.Adapter
 		// Create a ViewHolder based on the inflated XML layout.
 		// Maintain a list of all ViewHolders that are created by this adapter,
 		// so that bitmaps allocated in the ViewHolder can be freed.
-		var holder = new ViewHolder(activity, (RelativeLayout)view, (int)(screenWidth * 0.5), Click);
-		viewHolders.Add(holder);
+		var holder = new ViewHolder(this.activity, (RelativeLayout)view, (int)(this.screenWidth * 0.5), Click);
+		this.viewHolders.Add(holder);
 		return holder;
 	}
 
