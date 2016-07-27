@@ -10,11 +10,14 @@ using System;
 using System.Collections.Generic;
 
 using Android.App;
-using Android.Support.V7.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
+using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+
+using Android.Support.V7.App;
 using Android.Support.V7.Widget;
 
 using Uri = Android.Net.Uri;
@@ -23,25 +26,20 @@ using Toolbar = Android.Support.V7.Widget.Toolbar;
 namespace LifeSharp
 {
 
-public class GalleryAdapter : RecyclerView.Adapter
+public class GalleryAdapter : RecyclerGalleryView.Adapter
 {
-	Context _context;
 	IImageDatabase _db;
 	List<UserSummary> _users;
 
-	public class ViewHolder : RecyclerView.ViewHolder
+	public class ViewHolder : RecyclerGalleryView.ViewHolder
 	{
-		Context _context;
 		public UserSummary userSummary { get; private set; }
-		public ImageView imageView { get; private set; }
 		public TextView userLoginView { get; private set; }
 		public TextView numImagesView { get; private set; }
 		public TextView latestTimeView { get; private set; }
 
-		public ViewHolder(Context context, CardView itemView, EventHandler<UserSummary> onClick) : base(itemView)
+		public ViewHolder(Activity activity, CardView itemView, int targetWidth, EventHandler<UserSummary> onClick) : base(activity, itemView, targetWidth)
 		{
-			_context = context;
-
 			// Clicking on the item view triggers the adapter's Click event.
 			itemView.Click += delegate {
 				onClick(this, userSummary);
@@ -56,30 +54,31 @@ public class GalleryAdapter : RecyclerView.Adapter
 
 		public void SetUser(UserSummary userSummary)
 		{
-			this.userSummary = userSummary;
+			// Base class handles decoding and assigning image to view.
+			SetImageViewTarget(userSummary.lastImage);
 
-			// Set child view content based on user summary
-			imageView.SetImageURI(Uri.Parse(userSummary.lastImage.sourcePath));
-			numImagesView.Text = _context.Resources.GetQuantityString(
+			// Additional things to be done for this class.
+			this.userSummary = userSummary;
+			numImagesView.Text = activity.Resources.GetQuantityString(
 				Resource.Plurals.gallery_card_numImages, userSummary.numImages,
 				new Java.Lang.Object[]{ userSummary.numImages });
 			userLoginView.Text = userSummary.userLogin;
-			latestTimeView.Text = _context.GetString(Resource.String.gallery_card_latestImage)
+			latestTimeView.Text = activity.GetString(Resource.String.gallery_card_latestImage)
 				+ " " + userSummary.lastImage.queueStamp.ToLocalTime().ToString("G");
 		}
 	}
 
-	public GalleryAdapter(Context context)
+	public GalleryAdapter(Activity activity) : base(activity)
 	{
-		_context = context;
-		_db = ImageDatabaseAndroid.GetSingleton(_context);
+		_db = ImageDatabaseAndroid.GetSingleton(activity);
 		_users = _db.getUserSummaries();
 	}
 
 	public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
 	{
 		var view = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.GalleryCardView, parent, false);
-		var viewHolder = new ViewHolder(_context, (CardView)view, Click);
+		var viewHolder = new ViewHolder(activity, (CardView)view, screenWidth, Click);
+		viewHolders.Add(viewHolder);
 		return viewHolder;
 	}
 
@@ -142,6 +141,15 @@ public class GalleryActivity : AppCompatActivity
 			userGalleryActivity.PutExtra("user", user.userLogin);
 			StartActivity(userGalleryActivity);
 		};
+	}
+
+	protected override void OnDestroy ()
+	{
+		base.OnDestroy();
+
+		// When this activity ends, free memory used by all bitmaps that were
+		// allocated for the RecyclerView adapter's view holders.
+		_adapter.FreeAllBitmaps();
 	}
 }
 
