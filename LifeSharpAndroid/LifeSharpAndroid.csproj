@@ -115,6 +115,7 @@
     <Compile Include="UserGalleryActivity.cs" />
     <Compile Include="DynamicImageView.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="RecyclerGalleryView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
