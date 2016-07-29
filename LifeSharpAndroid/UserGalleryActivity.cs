@@ -133,7 +133,10 @@ public class UserGalleryActivity : AppCompatActivity
 
 		// Respond to clicks on image tiles.
 		_adapter.Click += delegate(Object sender, int imageId) {
-			Toast.MakeText(this, "Image clicked: " + imageId, ToastLength.Short).Show();
+			var imagePagerActivity = new Intent(this, typeof(ImagePagerActivity));
+			imagePagerActivity.PutExtra("user", Intent.GetStringExtra("user"));
+			imagePagerActivity.PutExtra("imageId", imageId);
+			StartActivity(imagePagerActivity);
 		};
 	}
 

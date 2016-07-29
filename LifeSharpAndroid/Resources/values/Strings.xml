@@ -4,6 +4,7 @@
 	<string name="configure_notifications_activity_title">Notification Settings</string>
 	<string name="gallery_activity_title">Gallery</string>
 	<string name="user_gallery_activity_title">User Gallery</string>
+	<string name="image_activity_title">View Image</string>
 	<plurals name="gallery_card_numImages">
 		<item quantity="one">%d image downlaoded</item>
 		<item quantity="other">%d images downloaded</item>
