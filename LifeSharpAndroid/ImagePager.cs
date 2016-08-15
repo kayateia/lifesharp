@@ -6,9 +6,11 @@
 	Please see the file LICENSE for more info.
  */
 
+using System;
 using System.Collections.Generic;
 
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
 using Android.Util;
 using Android.Widget;
@@ -31,18 +33,39 @@ public class ImageFragment : Fragment
 	public static readonly string KeyUploadTime = "uploadTime";
 	public static readonly string KeyUserName = "userName";
 
+	public const string LogTag = "ImageFragment";
+
+	ImageView _imageView;
+	WeakReference<Bitmap> _bitmapReference;
+
 	public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		// Instantiate layout based on layout XML.
 		View view = inflater.Inflate(Resource.Layout.SingleImageView, container, false);
 
 		// Find the image view within the inflated layout.
-		ImageView imageView = view.FindViewById<ImageView>(Resource.Id.singleImageView);
+		_imageView = view.FindViewById<ImageView>(Resource.Id.singleImageView);
 
 		// Display image at the given URI.
-		imageView.SetImageURI(Uri.Parse(Arguments.GetString(KeySourcePath)));
+		Log.Info(LogTag, "Allocating memory for bitmap of {0}", Arguments.GetString(KeyFileName));
+		var bitmap = BitmapFactory.DecodeFile(Arguments.GetString(KeySourcePath));
+		_imageView.SetImageBitmap(bitmap);
+		_bitmapReference = new WeakReference<Bitmap>(bitmap);
 
 		return view;
+	}
+
+	public override void OnDestroyView ()
+	{
+		base.OnDestroyView();
+
+		Log.Info(LogTag, "Freeing memory used by bitmap of {0}", Arguments.GetString(KeyFileName));
+		Bitmap bitmap;
+		_imageView.SetImageBitmap(null);
+		if (_bitmapReference != null && _bitmapReference.TryGetTarget(out bitmap) && !bitmap.IsRecycled)
+		{
+			bitmap.Recycle();
+		}
 	}
 }
 
